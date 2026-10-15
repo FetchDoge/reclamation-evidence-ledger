@@ -193,12 +193,12 @@ We welcome contributions, methodological audits, and data validation! Please see
 If you use this project, pipeline methodology, or the published evidence packets in research or reports, please cite it:
 
 ```bibtex
-@software{marr2026reclamation,
-  author = {Marr, Julian},
+@software{richards2026reclamation,
+  author = {Richards, Marcus},
   title = {Reclamation Evidence Ledger: Satellite Watchdog for Alberta Orphan Well Reclamation},
   year = {2026},
   url = {https://github.com/FetchDoge/reclamation-evidence-ledger},
-  version = {0.3.1}
+  version = {0.4.0}
 }
 ```
 

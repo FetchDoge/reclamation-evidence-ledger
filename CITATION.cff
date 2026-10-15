@@ -1,12 +1,12 @@
 cff-version: 1.2.0
 message: "If you use this software or its evidence ledger data in research or publications, please cite it as below."
 authors:
-  - family-names: "Marr"
-    given-names: "Julian"
+  - family-names: "Richards"
+    given-names: "Marcus"
 title: "Reclamation Evidence Ledger: Satellite Watchdog for Alberta Orphan Well Reclamation"
-version: 0.3.1
-date-released: 2026-10-01
-url: "https://github.com/marsojuji-cmyk/reclamation-evidence-ledger"
+version: 0.4.0
+date-released: 2026-10-09
+url: "https://github.com/FetchDoge/reclamation-evidence-ledger"
 keywords:
   - "sentinel-2"
   - "remote-sensing"
