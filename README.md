@@ -4,11 +4,11 @@
 
 **This pipeline watches Alberta's orphan-well reclamation from orbit. It compares Sentinel-2 imagery month for month and stamps every claim with provenance, uncertainty, and limits.**
 
-[![CI](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/actions/workflows/ci.yml/badge.svg)](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](requirements.txt) [![Release](https://img.shields.io/github/v/release/marsojuji-cmyk/reclamation-evidence-ledger)](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/releases) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Discussions](https://img.shields.io/badge/Discussions-Join-blueviolet.svg)](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/discussions)
+[![CI](https://github.com/FetchDoge/reclamation-evidence-ledger/actions/workflows/ci.yml/badge.svg)](https://github.com/FetchDoge/reclamation-evidence-ledger/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](requirements.txt) [![Release](https://img.shields.io/github/v/release/FetchDoge/reclamation-evidence-ledger)](https://github.com/FetchDoge/reclamation-evidence-ledger/releases) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md) [![Discussions](https://img.shields.io/badge/Discussions-Join-blueviolet.svg)](https://github.com/FetchDoge/reclamation-evidence-ledger/discussions)
 
 An independent satellite watchdog. It uses free Sentinel-2 imagery and a fully automated Python pipeline, and it answers one question per site on a schedule: *is the land healing?*
 
-**[Live evidence dashboard](https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/)** · 99-site pilot · 13 licensees · Alberta, Canada
+**[Live evidence dashboard](https://FetchDoge.github.io/reclamation-evidence-ledger/)** · 99-site pilot · 13 licensees · Alberta, Canada
 
 The dashboard (`docs/index.html`) renders from the packets themselves with `python ops/render_dashboard.py`. It shows the audit story, the 99-site findings register, per-site dossiers with NDVI time series, the method, and the ongoing self-audit. It computes every packet-derived number (sites, licensees, findings, render stamp) at render time. The one fixed figure is the registry-size counter (21,892), taken from the 2026-09-01 OWA inventory.
 
@@ -178,14 +178,14 @@ Copernicus data requires attribution — see the site footer.
 
 ## Status
 
-v0.3.1 ([releases](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/releases)), with a 99-site pilot published. Outputs prioritize sites for ground inspection. They are not compliance verdicts.
+v0.3.1 ([releases](https://github.com/FetchDoge/reclamation-evidence-ledger/releases)), with a 99-site pilot published. Outputs prioritize sites for ground inspection. They are not compliance verdicts.
 
 ## Contributing & Community
 
 We welcome contributions, methodological audits, and data validation! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for local setup, testing guidelines, and PR workflow, and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards.
 
-- Join discussions: [GitHub Discussions](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/discussions)
-- Report bugs: [Issue Tracker](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/issues)
+- Join discussions: [GitHub Discussions](https://github.com/FetchDoge/reclamation-evidence-ledger/discussions)
+- Report bugs: [Issue Tracker](https://github.com/FetchDoge/reclamation-evidence-ledger/issues)
 - Security reports: [SECURITY.md](SECURITY.md)
 
 ## Citation
@@ -197,7 +197,7 @@ If you use this project, pipeline methodology, or the published evidence packets
   author = {Marr, Julian},
   title = {Reclamation Evidence Ledger: Satellite Watchdog for Alberta Orphan Well Reclamation},
   year = {2026},
-  url = {https://github.com/marsojuji-cmyk/reclamation-evidence-ledger},
+  url = {https://github.com/FetchDoge/reclamation-evidence-ledger},
   version = {0.3.1}
 }
 ```
