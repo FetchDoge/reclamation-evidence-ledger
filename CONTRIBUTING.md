@@ -10,7 +10,7 @@ All contributors and participants are expected to uphold our [Code of Conduct](C
 
 * **Report bugs or data discrepancies:** If you find a data discrepancy, a coordinate translation issue, or an edge case in change detection, open an issue using the [Bug Report](.github/ISSUE_TEMPLATE/bug_report.yml) template.
 * **Question or audit evidence:** If you want to audit or dispute an evidence packet for a specific site, use the [Evidence Query](.github/ISSUE_TEMPLATE/evidence_inquiry.yml) template.
-* **Propose improvements:** New indices, better cloud masking, or workflow performance enhancements can be proposed via [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.yml) or [Discussions](https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/discussions).
+* **Propose improvements:** New indices, better cloud masking, or workflow performance enhancements can be proposed via [Feature Requests](.github/ISSUE_TEMPLATE/feature_request.yml) or [Discussions](https://github.com/FetchDoge/reclamation-evidence-ledger/discussions).
 * **Submit Pull Requests:** Code, documentation, schemas, and test contributions are welcome.
 
 ## Development Setup
@@ -21,7 +21,7 @@ Requirements:
 
 ```bash
 # Clone the repository
-git clone https://github.com/marsojuji-cmyk/reclamation-evidence-ledger.git
+git clone https://github.com/FetchDoge/reclamation-evidence-ledger.git
 cd reclamation-evidence-ledger
 
 # Create and activate a virtual environment

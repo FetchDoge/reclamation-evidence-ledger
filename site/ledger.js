@@ -106,7 +106,7 @@ function renderTable(){
       '<td class="num">'+fmtD(s.delta)+'</td>'+
       '<td class="num">'+esc(ciStr(s.ci))+'</td>'+
       '<td class="num">'+s.mm.join(',')+'</td>'+
-      '<td><a href="https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/'+s.page+'" target="_blank" rel="noopener">packet&nbsp;\u2197</a></td>';
+      '<td><a href="https://fetchdoge.github.io/reclamation-evidence-ledger/'+s.page+'" target="_blank" rel="noopener">packet&nbsp;\u2197</a></td>';
     tr.addEventListener('click', function(ev){
       if(ev.target.tagName==='A') return;
       selectSite(s.id);
@@ -153,7 +153,7 @@ function renderDossier(s){
   dm.innerHTML='<span>'+esc(s.lic)+'</span><span>'+s.lat+', '+s.lon+'</span>'+
     '<span>'+s.nobs+' scenes</span><span>'+s.nchips+' chips</span>'+
     '<span>matched months: '+s.mm.map(function(m){return MONTHS[m];}).join(', ')+'</span>'+
-    '<span><a href="https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/'+s.page+'" target="_blank" rel="noopener">full evidence packet \u2197</a></span>';
+    '<span><a href="https://fetchdoge.github.io/reclamation-evidence-ledger/'+s.page+'" target="_blank" rel="noopener">full evidence packet \u2197</a></span>';
   host.appendChild(dm);
   // time series
   var W=920,H=360,ml=56,mr=16,mt=26,mb=46;
