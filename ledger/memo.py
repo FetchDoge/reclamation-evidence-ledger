@@ -123,7 +123,7 @@ def build_validation_memo(packets: list[dict], title: str = "Screening Validatio
             "- **Drought & Regional Variation:** Regional moisture anomalies affect baseline comparisons; ground confirmation is essential.",
             "",
             "---",
-            "© 2026 Reclamation Evidence · Calgary, Alberta · contact@marcusrichards.dev",
+            "© 2026 Marcus Richards · Calgary, Alberta · contact@marcusrichards.dev",
         ]
     )
 
