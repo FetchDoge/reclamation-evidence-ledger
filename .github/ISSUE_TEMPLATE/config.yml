@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: GitHub Discussions
-    url: https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/discussions
+    url: https://github.com/FetchDoge/reclamation-evidence-ledger/discussions
     about: Ask questions, discuss methodology, and share ideas.
   - name: Live Evidence Dashboard
-    url: https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/
+    url: https://fetchdoge.github.io/reclamation-evidence-ledger/
     about: View the live interactive pilot ledger and site dossiers.
   - name: Security Vulnerability Reporting
-    url: https://github.com/marsojuji-cmyk/reclamation-evidence-ledger/security/advisories/new
+    url: https://github.com/FetchDoge/reclamation-evidence-ledger/security/advisories/new
     about: Privately report a security issue.
