@@ -204,6 +204,8 @@ If you use this project, pipeline methodology, or the published evidence packets
 
 See [CITATION.cff](CITATION.cff) for complete metadata.
 
+Built by Marcus Richards, directing AI coding agents.
+
 ## License
 
 MIT. See [LICENSE](LICENSE). Copernicus Sentinel data requires attribution; see the site footer.
