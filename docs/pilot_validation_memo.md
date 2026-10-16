@@ -1,15 +1,16 @@
 # Alberta Orphan Well Pilot Validation Memo
 
 **Reclamation Evidence** · Calgary, Alberta · `contact@marcusrichards.dev`  
-**Date:** 2026-10-09 | **Protocol:** Month-Matched Median-of-Deltas (Sentinel-2 L2A)  
+**Date:** 2026-10-11 | **Protocol:** Month-Matched Median-of-Deltas (Sentinel-2 L2A)  
 
 ---
 
 ## Executive Screening Summary
 
 - **Total Sites Screened:** 99
-- **Recovery Detected:** 71 (Measured spectral shift vs baseline)
-- **Recovery Identified:** 28 (Signal consistent with sustained vegetative recovery)
+- **Published tier `detected`:** 99 (screening only; an NDVI difference vs baseline was measured, not a finding of recovery)
+- **Published tier `identified`:** 0 (withheld while `claim.publication_hold` is active)
+- **Status 2026-10-09:** screening results did not hold up under pre-registered testing (NEGATIVE-RESULT-2026-10-09.md); not evidence of recovery at any well.
 - **Honest Refusals:** 0 (Fewer than 2 matched calendar months; no claim made)
 
 > [!IMPORTANT]
@@ -27,8 +28,8 @@ so field inspection resources can be dispatched where physical verification is m
 
 | Rank | Site ID | Name | Stage | Delta (NDVI) | 95% CI | Tier | Conf | Triage Recommendation |
 | :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| 1 | `04-27-035-25W4 (102)` | 04-27-035-25W4 (102) | reclamation | -0.180 | [-0.41, +0.16] | identified | medium | Walk First: Negative vegetation trend. Priority field inspection. |
-| 2 | `14-30-016-17W4 (100)` | 14-30-016-17W4 (100) | reclamation | -0.088 | [-0.14, +0.12] | identified | medium | Walk First: Negative vegetation trend. Priority field inspection. |
+| 1 | `04-27-035-25W4 (102)` | 04-27-035-25W4 (102) | reclamation | -0.180 | [-0.41, +0.16] | detected | medium | Walk First: Negative vegetation trend. Priority field inspection. |
+| 2 | `14-30-016-17W4 (100)` | 14-30-016-17W4 (100) | reclamation | -0.088 | [-0.14, +0.12] | detected | medium | Walk First: Negative vegetation trend. Priority field inspection. |
 | 3 | `16-12-036-28W4 (100) - WIPA` | 16-12-036-28W4 (100) - WIPA | reclamation | -0.073 | [-0.32, +0.09] | detected | medium | Walk First: Negative vegetation trend. Priority field inspection. |
 | 4 | `09-18-015-19W4 (102) - WIPA` | 09-18-015-19W4 (102) - WIPA | reclamation | -0.051 | [-0.42, +0.08] | detected | medium | Walk First: Negative vegetation trend. Priority field inspection. |
 | 5 | `07-30-018-26W4 (100)` | 07-30-018-26W4 (100) | reclamation | -0.045 | Not estimated | detected | low | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
@@ -100,32 +101,32 @@ so field inspection resources can be dispatched where physical verification is m
 | 71 | `07-16-020-27W4 (102/10-16)` | 07-16-020-27W4 (102/10-16) | reclamation | +0.078 | [-0.15, +0.42] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
 | 72 | `11-08-014-22W4 (Multi)` | 11-08-014-22W4 (Multi) | reclamation | +0.079 | [+0.02, +0.16] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
 | 73 | `05-17-019-27W4 (100)` | 05-17-019-27W4 (100) | reclamation | +0.080 | Not estimated | detected | low | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
-| 74 | `06-07-022-25W4 (100)` | 06-07-022-25W4 (100) | reclamation | +0.080 | [-0.09, +0.11] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 75 | `16-16-030-16W4 (100) - WIPA` | 16-16-030-16W4 (100) - WIPA | reclamation | +0.082 | [+0.01, +0.15] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 76 | `02-07-019-27W4 (100)` | 02-07-019-27W4 (100) | reclamation | +0.084 | [+0.04, +0.15] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 77 | `10-02-018-26W4 (100)` | 10-02-018-26W4 (100) | reclamation | +0.084 | [+0.01, +0.11] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 78 | `05-34-016-20W4 (102)` | 05-34-016-20W4 (102) | reclamation | +0.086 | [+0.01, +0.21] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 79 | `04-12-014-20W4 (100)` | 04-12-014-20W4 (100) | reclamation | +0.086 | [-0.02, +0.22] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 80 | `13-17-019-27W4 (100)` | 13-17-019-27W4 (100) | reclamation | +0.087 | [+0.00, +0.36] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 81 | `12-23-020-27W4 (Multi) - MIXED` | 12-23-020-27W4 (Multi) - MIXED | reclamation | +0.089 | Not estimated | identified | low | Candidate: Positive recovery signal identified across seasons. |
-| 82 | `14-29-012-27W4 (102) - WIPA` | 14-29-012-27W4 (102) - WIPA | reclamation | +0.089 | [+0.01, +0.53] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 83 | `08-04-019-27W4 (100)` | 08-04-019-27W4 (100) | reclamation | +0.090 | Not estimated | identified | low | Candidate: Positive recovery signal identified across seasons. |
-| 84 | `07-21-022-21W4 (100/02-21)` | 07-21-022-21W4 (100/02-21) | reclamation | +0.090 | [-0.16, +0.20] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 85 | `16-13-022-26W4 (100)` | 16-13-022-26W4 (100) | reclamation | +0.097 | [-0.16, +0.17] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 86 | `15-32-013-19W4 (100) - PS` | 15-32-013-19W4 (100) - PS | reclamation | +0.098 | [+0.03, +0.31] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 87 | `01-28-020-27W4 (Facility)` | 01-28-020-27W4 (Facility) | reclamation | +0.098 | Not estimated | identified | low | Candidate: Positive recovery signal identified across seasons. |
-| 88 | `06-36-018-26W4 (Multi) - MIXED` | 06-36-018-26W4 (Multi) - MIXED | reclamation | +0.099 | Not estimated | identified | low | Candidate: Positive recovery signal identified across seasons. |
-| 89 | `13-01-014-22W4 (100)` | 13-01-014-22W4 (100) | reclamation | +0.102 | [-0.03, +0.19] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 90 | `06-35-011-22W4 (102)` | 06-35-011-22W4 (102) | reclamation | +0.111 | [-0.03, +0.20] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 91 | `16-15-030-19W4 (102)` | 16-15-030-19W4 (102) | reclamation | +0.129 | [+0.06, +0.21] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 92 | `06-11-018-26W4 (100)` | 06-11-018-26W4 (100) | reclamation | +0.137 | [-0.06, +0.20] | identified | high | Candidate: Positive recovery signal identified across seasons. |
-| 93 | `14-14-018-26W4 (100)` | 14-14-018-26W4 (100) | reclamation | +0.138 | [-0.18, +0.22] | identified | high | Candidate: Positive recovery signal identified across seasons. |
-| 94 | `16-04-018-26W4 (100)` | 16-04-018-26W4 (100) | reclamation | +0.144 | [+0.03, +0.34] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 95 | `16-14-018-26W4 (100)` | 16-14-018-26W4 (100) | reclamation | +0.145 | [-0.10, +0.20] | identified | high | Candidate: Positive recovery signal identified across seasons. |
-| 96 | `11-27-015-18W4 (Facility)` | 11-27-015-18W4 (Facility) | reclamation | +0.156 | [-0.13, +0.44] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 97 | `09-14-014-20W4 (100)` | 09-14-014-20W4 (100) | reclamation | +0.181 | [+0.07, +0.22] | identified | medium | Candidate: Positive recovery signal identified across seasons. |
-| 98 | `05-13-020-27W4 (100)` | 05-13-020-27W4 (100) | reclamation | +0.212 | Not estimated | identified | low | Candidate: Positive recovery signal identified across seasons. |
-| 99 | `06-17-016-20W4 (100)` | 06-17-016-20W4 (100) | reclamation | +0.222 | Not estimated | identified | medium | Candidate: Positive recovery signal identified across seasons. |
+| 74 | `06-07-022-25W4 (100)` | 06-07-022-25W4 (100) | reclamation | +0.080 | [-0.09, +0.11] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 75 | `16-16-030-16W4 (100) - WIPA` | 16-16-030-16W4 (100) - WIPA | reclamation | +0.082 | [+0.01, +0.15] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 76 | `02-07-019-27W4 (100)` | 02-07-019-27W4 (100) | reclamation | +0.084 | [+0.04, +0.15] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 77 | `10-02-018-26W4 (100)` | 10-02-018-26W4 (100) | reclamation | +0.084 | [+0.01, +0.11] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 78 | `05-34-016-20W4 (102)` | 05-34-016-20W4 (102) | reclamation | +0.086 | [+0.01, +0.21] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 79 | `04-12-014-20W4 (100)` | 04-12-014-20W4 (100) | reclamation | +0.086 | [-0.02, +0.22] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 80 | `13-17-019-27W4 (100)` | 13-17-019-27W4 (100) | reclamation | +0.087 | [+0.00, +0.36] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 81 | `12-23-020-27W4 (Multi) - MIXED` | 12-23-020-27W4 (Multi) - MIXED | reclamation | +0.089 | Not estimated | detected | low | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 82 | `14-29-012-27W4 (102) - WIPA` | 14-29-012-27W4 (102) - WIPA | reclamation | +0.089 | [+0.01, +0.53] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 83 | `08-04-019-27W4 (100)` | 08-04-019-27W4 (100) | reclamation | +0.090 | Not estimated | detected | low | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 84 | `07-21-022-21W4 (100/02-21)` | 07-21-022-21W4 (100/02-21) | reclamation | +0.090 | [-0.16, +0.20] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 85 | `16-13-022-26W4 (100)` | 16-13-022-26W4 (100) | reclamation | +0.097 | [-0.16, +0.17] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 86 | `15-32-013-19W4 (100) - PS` | 15-32-013-19W4 (100) - PS | reclamation | +0.098 | [+0.03, +0.31] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 87 | `01-28-020-27W4 (Facility)` | 01-28-020-27W4 (Facility) | reclamation | +0.098 | Not estimated | detected | low | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 88 | `06-36-018-26W4 (Multi) - MIXED` | 06-36-018-26W4 (Multi) - MIXED | reclamation | +0.099 | Not estimated | detected | low | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 89 | `13-01-014-22W4 (100)` | 13-01-014-22W4 (100) | reclamation | +0.102 | [-0.03, +0.19] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 90 | `06-35-011-22W4 (102)` | 06-35-011-22W4 (102) | reclamation | +0.111 | [-0.03, +0.20] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 91 | `16-15-030-19W4 (102)` | 16-15-030-19W4 (102) | reclamation | +0.129 | [+0.06, +0.21] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 92 | `06-11-018-26W4 (100)` | 06-11-018-26W4 (100) | reclamation | +0.137 | [-0.06, +0.20] | detected | high | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 93 | `14-14-018-26W4 (100)` | 14-14-018-26W4 (100) | reclamation | +0.138 | [-0.18, +0.22] | detected | high | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 94 | `16-04-018-26W4 (100)` | 16-04-018-26W4 (100) | reclamation | +0.144 | [+0.03, +0.34] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 95 | `16-14-018-26W4 (100)` | 16-14-018-26W4 (100) | reclamation | +0.145 | [-0.10, +0.20] | detected | high | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 96 | `11-27-015-18W4 (Facility)` | 11-27-015-18W4 (Facility) | reclamation | +0.156 | [-0.13, +0.44] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 97 | `09-14-014-20W4 (100)` | 09-14-014-20W4 (100) | reclamation | +0.181 | [+0.07, +0.22] | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 98 | `05-13-020-27W4 (100)` | 05-13-020-27W4 (100) | reclamation | +0.212 | Not estimated | detected | low | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
+| 99 | `06-17-016-20W4 (100)` | 06-17-016-20W4 (100) | reclamation | +0.222 | Not estimated | detected | medium | Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch. |
 
 ---
 

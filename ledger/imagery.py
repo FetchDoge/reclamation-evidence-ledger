@@ -16,12 +16,11 @@ SHA-256 of each written chip, the clear-pixel fraction, and any rejections.
 Raw chips are evidence: never modified after download. Checksums are recorded
 at write time.
 
-TLS note: this environment's egress proxy terminates TLS with its own CA,
-which GDAL's bundled OpenSSL does not trust even though the platform CA
-bundle (used by curl/requests) does. `trust_egress_proxy_tls` in config
-therefore sets GDAL_HTTP_UNSAFESSL so windowed reads work at all. No
-credentials or private data transit this path — only public satellite pixels
-from a known S3 host. Set it False on a network with a normal CA chain.
+TLS note: TLS verification is on by default. Some sandboxed networks
+terminate TLS at an egress proxy whose CA GDAL's bundled OpenSSL does not
+trust. Only there should an operator set LEDGER_TRUST_EGRESS_PROXY_TLS=1,
+which sets GDAL_HTTP_UNSAFESSL so windowed reads work; packets built that way
+carry a caveat saying so. No credentials or private data transit this path.
 """
 
 from __future__ import annotations

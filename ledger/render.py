@@ -5,7 +5,8 @@ static pages: an index table plus one page per packet. Anything a reader
 needs is in the HTML; the JSON packets sit alongside for verification.
 
 Usage:
-    python -m ledger.render --packets packets/ --out public/
+    python -m ledger.render --packets packets/ --out docs/
+    python ops/render_dashboard.py   # then overwrite docs/index.html
 """
 
 from __future__ import annotations
@@ -30,21 +31,39 @@ body{{font-family:system-ui,sans-serif;max-width:70ch;margin:2rem auto;padding:0
 .tier{{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-weight:600}}
 .detected{{background:#fff3cd}} .identified{{background:#d1ecf1}} .not_assessable{{background:#e2e3e5;border:1px dashed #6c757d}}
 table{{border-collapse:collapse;width:100%}} th,td{{border:1px solid #ccc;padding:.4rem;text-align:left}}
+.hold{{border:3px solid #222;padding:.6rem 1rem;margin:0 0 1rem;font-weight:600}}
 .caveat{{background:#f8f9fa;border-left:4px solid #999;padding:.5rem 1rem;margin:.5rem 0}}
 footer{{margin-top:3rem;font-size:.85rem;color:#555;border-top:1px solid #ccc;padding-top:1rem}}
 code{{background:#f4f4f4;padding:.1rem .3rem}}
 </style></head>
 <body>
+{banner}
 <h1>Reclamation Evidence Ledger</h1>
 {body}
 <footer><p>{attribution}</p>
 <p>Screening only: these packets prioritize ground inspection. They are not
-compliance verdicts and name no responsible party.</p></footer>
+legal proof, reclamation certifications or compliance verdicts, they do not
+measure methane, soil, contamination or subsurface conditions, and they name
+no responsible party. A tier describes NDVI in a ~1 km² square around a DLS
+centroid, mostly land around the pad, not the pad itself.</p></footer>
 </body></html>"""
 
 
 def _esc(v) -> str:
     return html.escape(str(v))
+
+
+def _banner() -> str:
+    from .change import PUBLICATION_HOLD
+
+    if not PUBLICATION_HOLD.get("active"):
+        return ""
+    return (
+        '<div class="hold" role="status">Re-scoring in progress (Oct 2026): '
+        "site-level calls are withheld pending a surrounding-land baseline. "
+        'Every site is published as "detected – screening only". '
+        f"{_esc(PUBLICATION_HOLD['reason'])}</div>"
+    )
 
 
 def render_packet(packet: dict, chart_file: str | None = None) -> str:
@@ -68,6 +87,42 @@ def render_packet(packet: dict, chart_file: str | None = None) -> str:
         for s in packet["provenance"]["sources"]
     )
     s = packet["site"]
+    prov = packet["provenance"]
+    review = prov.get("review") or {}
+    review_txt = (
+        "no human review recorded"
+        if not review.get("log")
+        else f"{len(review['log'])} review(s) recorded"
+    )
+    owa = prov.get("owa_inventory_file") or {}
+    owa_txt = (
+        f"OWA file {_esc(owa.get('file_date'))}, sha256 <code>{_esc(owa.get('sha256'))}</code>"
+        if owa.get("sha256")
+        else _esc(owa.get("note", "OWA inventory file not recorded"))
+    )
+    recheck = prov.get("owa_recheck")
+    if recheck:
+        owa_txt += (
+            f"<br>Re-checked against OWA file {_esc(recheck.get('file_date'))} "
+            f"(sha256 <code>{_esc(recheck.get('sha256'))}</code>) on "
+            f"{_esc(recheck.get('checked_on'))}: site "
+            f"{'found' if recheck.get('site_found') else 'NOT found'}, stage "
+            f"{_esc(recheck.get('owa_stage'))}"
+        )
+    n_src = sum(1 for ch in packet.get("chips", []) if ch.get("source_url"))
+    # Date and change only: while the publication hold is active, pages do
+    # not restate intermediate (internal) tiers. The packet JSON keeps them.
+    revisions = "".join(
+        f"<li>{_esc(r.get('date'))}: {_esc(r.get('change'))}"
+        + (
+            f" (previous packet archived at <code>{_esc(r['archived_packet'])}</code>)"
+            if r.get("archived_packet")
+            else ""
+        )
+        + "</li>"
+        for r in prov.get("revisions", [])
+    )
+    revisions_html = f"<h3>Revisions</h3><ul>{revisions}</ul>" if revisions else ""
     loc = s.get("location")
     loc_html = (
         f"<p class='caveat'>Location: <b>{_esc(loc['status'])}</b> — {_esc(loc['source'])}"
@@ -94,6 +149,7 @@ def render_packet(packet: dict, chart_file: str | None = None) -> str:
     return PAGE_TMPL.format(
         title=_esc(packet["packet_id"]),
         attribution=ATTRIBUTION,
+        banner=_banner(),
         body=f"""
 <h2>Site {_esc(s["site_id"])}</h2>
 <p>{_esc(s.get("name", ""))} — {_esc(s["latitude"])}, {_esc(s["longitude"])}<br>
@@ -101,7 +157,8 @@ OWA stage: <b>{_esc(s["owa_stage"])}</b> (inventory {_esc(s.get("owa_inventory_d
 {loc_html}
 <h3>Claim <span class="tier {c["tier"]}">{_esc(c["tier"]).replace("_", " ").upper()}</span></h3>
 <p><b>{_esc(c["statement"])}</b> — {_esc(c["rationale"])}<br>
-Confidence: {_esc(c.get("confidence", "n/a"))}</p>
+Confidence: {_esc(c.get("confidence", "n/a"))}
+· Review: {review_txt}</p>
 {na_html}
 {chart_html}
 {caveats}
@@ -112,18 +169,21 @@ Confidence: {_esc(c.get("confidence", "n/a"))}</p>
 <ol>{transforms}</ol>
 <h3>Sources</h3>
 <ul>{srcs}</ul>
+<p>{owa_txt}</p>
+<p>{n_src} of {len(packet.get("chips", []))} chips cite their source COG URL and
+SHA-256 in the packet JSON.</p>
+{revisions_html}
 <p><a href="index.html">← ledger index</a></p>
 """,
     )
 
 
-def _marker_color(statement: str) -> str:
-    st = (statement or "").lower()
-    if "recovering" in st:
-        return "green"
-    if "stalled" in st or "regressing" in st:
-        return "orange"
-    return "grey"
+def _marker_color(claim: dict) -> str:
+    """Colour only published identified results; everything else is grey.
+    (While the publication hold is active nothing is identified.)"""
+    if claim.get("tier") != "identified":
+        return "grey"
+    return {"increase": "#1f6fb2", "decrease": "#b25f1f"}.get(claim.get("direction"), "grey")
 
 
 def render_index_map(packets: list[dict], pages: list[str]) -> str:
@@ -140,7 +200,7 @@ def render_index_map(packets: list[dict], pages: list[str]) -> str:
                 "tier": packet["claim"]["tier"],
                 "statement": packet["claim"]["statement"],
                 "confidence": packet["claim"].get("confidence", "n/a"),
-                "color": _marker_color(packet["claim"]["statement"]),
+                "color": _marker_color(packet["claim"]),
             }
         )
     data_js = json.dumps(pts)
@@ -170,9 +230,9 @@ for (const p of pts) {{
 }}
 if (bounds.length) map.fitBounds(bounds, {{padding: [20, 20]}});
 </script>
-<p><span style="color:green">●</span> recovering
-<span style="color:orange">●</span> stalled / regressing
-<span style="color:grey">●</span> no significant change.
+<p><span style="color:#1f6fb2">●</span> identified: NDVI higher than baseline
+<span style="color:#b25f1f">●</span> identified: NDVI lower than baseline
+<span style="color:grey">●</span> detected (no CI-supported change).
 Coordinates are DLS-derived (accuracy withdrawn 2026-10-09 — see NEGATIVE-RESULT-2026-10-09.md).
 Markers show screening areas, not wellheads.</p>
 """
@@ -217,6 +277,7 @@ def main() -> None:
     index = PAGE_TMPL.format(
         title="Index",
         attribution=ATTRIBUTION,
+        banner=_banner(),
         body=f"<h2>{len(packets)} evidence packets</h2>"
         + render_index_map(objs, pages)
         + "<table><tr><th>Packet</th><th>Tier</th><th>Finding</th><th>Confidence</th></tr>"

@@ -56,8 +56,13 @@ def build_validation_memo(packets: list[dict], title: str = "Screening Validatio
         "## Executive Screening Summary",
         "",
         f"- **Total Sites Screened:** {total_sites}",
-        f"- **Recovery Detected:** {detected_count} (Measured spectral shift vs baseline)",
-        f"- **Recovery Identified:** {identified_count} (Signal consistent with sustained vegetative recovery)",
+        f"- **Published tier `detected`:** {detected_count} (screening only; an NDVI "
+        "difference vs baseline was measured, not a finding of recovery)",
+        f"- **Published tier `identified`:** {identified_count} (withheld while "
+        "`claim.publication_hold` is active)",
+        "- **Status 2026-10-09:** screening results did not hold up under "
+        "pre-registered testing (NEGATIVE-RESULT-2026-10-09.md); not evidence "
+        "of recovery at any well.",
         f"- **Not assessable:** {not_assessable_count} (the screen declines to make a claim; "
         "a normal result, not a finding about the site)",
         f"- **Honest Refusals:** {refused_count} (Fewer than 2 matched calendar months; no claim made)",

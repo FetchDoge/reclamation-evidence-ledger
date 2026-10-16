@@ -10,10 +10,18 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Embedded Public Ledger Data (99 Verified Packets) -->
+  <script src="ledger-data.js"></script>
   <script src="ledger.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
+
+  <!-- PUBLICATION HOLD + NOTICE 2026-10-09 (kept in sync with docs/index.html) -->
+  <aside id="ledger-hold-banner" role="alert" style="border:3px solid #92400e; background:#fffbeb; color:#78350f; padding:14px 20px; font-size:14px; line-height:1.5; text-align:center">
+    <b>RE-SCORING IN PROGRESS (OCT 2026).</b> Site-level calls are withheld pending a surrounding-land baseline; every site is published as <i>detected &ndash; screening only</i>.
+    <b>Notice 2026-10-09:</b> the screening results did not hold up under pre-registered testing (median geocoding error 2,658&nbsp;m) and are not evidence of recovery at any well.
+    <a href="https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/NEGATIVE-RESULT-2026-10-09.html" style="color:#78350f; font-weight:700">Read the negative result &rarr;</a>
+  </aside>
 
   <!-- Institutional Telemetry Command Header Bar -->
   <aside class="top-command-bar" aria-label="System Telemetry">
@@ -181,7 +189,7 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="global-search-input" placeholder="Search 99 sites by DLS LSD, Licensee, or UWI...">
+            <input type="text" id="global-search-input" placeholder="Search 99 sites by DLS LSD or UWI...">
           </div>
 
           <button class="btn-primary-order" onclick="document.querySelector('[data-view=\'order\']').click();">
@@ -260,7 +268,7 @@
           <div>
             <div class="metric-label">Analysis Packets Published</div>
             <div class="metric-value">99 Packets</div>
-            <div class="metric-caption">Across 13 Western Canadian Licensees</div>
+            <div class="metric-caption">Screening only; operator names not published</div>
           </div>
         </div>
 
@@ -276,9 +284,9 @@
             <span class="trend-badge green">&gt; +0.08 Delta</span>
           </div>
           <div>
-            <div class="metric-label">Vegetation Signals Detected</div>
-            <div class="metric-value">71 Sites</div>
-            <div class="metric-caption">Statistically significant recovery trajectory</div>
+            <div class="metric-label">Published as Detected &ndash; Screening Only</div>
+            <div class="metric-value"><span data-ledger="n_detected">99</span> Sites</div>
+            <div class="metric-caption">An NDVI difference was measured; not a finding of recovery</div>
           </div>
         </div>
 
@@ -295,9 +303,9 @@
             <span class="trend-badge blue">&lt; -0.08 Delta</span>
           </div>
           <div>
-            <div class="metric-label">Identified Stalled / Regressing</div>
-            <div class="metric-value">28 Sites</div>
-            <div class="metric-caption">Prioritized for immediate field assessment</div>
+            <div class="metric-label">Identified (Withheld)</div>
+            <div class="metric-value"><span data-ledger="n_identified">0</span> Sites</div>
+            <div class="metric-caption">Site-level calls withheld pending a surrounding-land baseline</div>
           </div>
         </div>
       </section>
@@ -406,7 +414,7 @@
               </div>
               <textarea id="well-intake-input" class="intake-textarea" placeholder="Paste Alberta Township System LSDs (e.g. 01-06-018-26W4, 11-14-017-21W4, 05-34-016-20W4)..."></textarea>
               <div class="intake-stats-bar">
-                <span>WCSB Spatial Engine validates ATS centroids (~±300m) absorbed by 500m screening buffer.</span>
+                <span>Site coordinates are DLS LSD centroids; their accuracy was withdrawn 2026-10-09 (median geocoding error 2,658 m, NEGATIVE-RESULT-2026-10-09.md).</span>
                 <span style="font-weight: 700; color: var(--navy);">Valid WCSB Bounds Verified</span>
               </div>
             </div>
@@ -531,11 +539,11 @@
             <div class="ledger-filter-row">
               <div class="ledger-pills-filter">
                 <button class="filter-pill-btn active" data-tier="all">All Packets (99)</button>
-                <button class="filter-pill-btn" data-tier="detected">Detected Recoveries (71)</button>
-                <button class="filter-pill-btn" data-tier="identified">Stalled / Regressing (28)</button>
+                <button class="filter-pill-btn" data-tier="detected">Detected &ndash; screening only (<span data-ledger="n_detected">99</span>)</button>
+                <button class="filter-pill-btn" data-tier="identified">Identified (<span data-ledger="n_identified">0</span>, withheld)</button>
                 <button class="filter-pill-btn" data-tier="high">High Confidence (3)</button>
               </div>
-              <input type="text" id="ledger-search-input" class="form-input" style="width: 250px; padding: 6px 12px;" placeholder="Filter by LSD or Licensee...">
+              <input type="text" id="ledger-search-input" class="form-input" style="width: 250px; padding: 6px 12px;" placeholder="Filter by LSD...">
             </div>
 
             <div class="table-wrap">
@@ -543,7 +551,6 @@
                 <thead>
                   <tr>
                     <th>Site LSD Identifier</th>
-                    <th>Licensee</th>
                     <th>Classification</th>
                     <th>Median Delta</th>
                     <th>95% Bootstrap CI</th>
@@ -555,7 +562,7 @@
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; color: var(--slate-500);">
-              <span id="ledger-showing-count">Showing 30 of 99 analysis packets across 13 licensees</span>
+              <span id="ledger-showing-count">Showing 30 of 99 analysis packets</span>
               <span>Method: Month-matched median-of-deltas on Sentinel-2</span>
             </div>
           </div>

@@ -82,7 +82,7 @@ def test_gate_without_record_is_not_ok():
 def _na_packet(status="unverified"):
     return {
         "packet_id": "T_2025-2026_growing_seasons",
-        "schema_version": "1.2.0",
+        "schema_version": "1.4.0",
         "site": {
             "site_id": "T",
             "latitude": 50.0,
@@ -99,7 +99,19 @@ def _na_packet(status="unverified"):
         },
         "observations": [],
         "transforms": [],
-        "provenance": {"sources": [], "generated_at": "x", "generated_by": "y"},
+        "provenance": {
+            "sources": [],
+            "generated_at": "x",
+            "generated_by": "y",
+            "review": {"status": "not_reviewed", "log": []},
+            "owa_inventory_file": {
+                "url": None,
+                "file_name": None,
+                "file_date": "2026-10-01",
+                "sha256": None,
+                "retrieved_at": None,
+            },
+        },
     }
 
 
@@ -121,6 +133,20 @@ def test_schema_verified_location_may_carry_detected_and_not_assessable_needs_re
     p = _na_packet("verified")
     p["claim"]["tier"] = "detected"
     p["claim"].pop("not_assessable_reasons")
+    with pytest.raises(
+        jsonschema.ValidationError
+    ):  # screen claims need direction/rule/internal tier
+        jsonschema.validate(p, SCHEMA)
+    p["claim"].update(
+        direction="none",
+        tier_rule="r",
+        screen_tier_internal={
+            "tier": "detected",
+            "direction": "none",
+            "statement": "s",
+            "rule": "r",
+        },
+    )
     jsonschema.validate(p, SCHEMA)
     q = _na_packet("verified")
     q["claim"].pop("not_assessable_reasons")
@@ -128,7 +154,7 @@ def test_schema_verified_location_may_carry_detected_and_not_assessable_needs_re
         jsonschema.validate(q, SCHEMA)
 
 
-def test_schema_v12_requires_location():
+def test_schema_v14_requires_location():
     p = copy.deepcopy(_na_packet())
     del p["site"]["location"]
     with pytest.raises(jsonschema.ValidationError):
