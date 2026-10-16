@@ -1,0 +1,26 @@
+{
+  "prereg_file": "placebo/PREREG-placebo-2026-10-16.md",
+  "prereg_sha256": "9b69e59f0e83d332d12bbece9286b923ed0b0ee488621e743ea3ae1c2041da55",
+  "pass_line_max_share_identified": 0.05,
+  "n_points": 100,
+  "n_eligible": 98,
+  "n_ineligible": 2,
+  "n_assessed": 98,
+  "n_refused": 0,
+  "n_no_scenes": 0,
+  "n_identified": 13,
+  "n_identified_recovering": 13,
+  "n_identified_stalled": 0,
+  "share_identified": 0.1326530612244898,
+  "wilson95_upper": 0.21383063229639532,
+  "verdict": "FAIL",
+  "secondary": {
+    "n_audit_rule_flag": 3,
+    "share_positive_delta": 0.6938775510204082,
+    "delta_median": 0.0253,
+    "delta_p05": -0.03879,
+    "delta_p95": 0.10310999999999985
+  },
+  "all_chip_hashes_verified": true,
+  "method": "ledger.change.assess, baseline 2023-2024 vs 2025-2026, thresholds +/-0.08 (unchanged)"
+}

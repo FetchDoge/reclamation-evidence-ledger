@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Summarize pilot-02 assessment results for the run report.
 
-Reads packets/*.json (schema v1.1.0), joins licensee from the registry,
+Reads packets/*.json (schema v1.3.0), joins licensee from the registry,
 prints tier x confidence distribution, licensee breakdown, refusal count,
-and per-licensee delta stats. No claim beyond what packets state.
+and per-licensee delta stats to the console (internal use only). The CSV it
+writes, ops/pilot02-results.csv, carries NO licensee names: the repo is
+public and licensee names are not published.
 """
 
 import glob
@@ -60,5 +62,5 @@ print(
     .round(3)
     .to_string()
 )
-df.to_csv("ops/pilot02-results.csv", index=False)
+df.drop(columns=["licensee"]).to_csv("ops/pilot02-results.csv", index=False)
 print("\nwrote ops/pilot02-results.csv")

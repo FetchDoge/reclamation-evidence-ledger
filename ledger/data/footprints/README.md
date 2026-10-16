@@ -9,7 +9,14 @@ For each site, the latest clear Sentinel-2 scene's chip was rendered as a
 false-colour composite (NIR→red, red→green, blue→blue) with the DLS LSD
 centroid marked — see `interpretation/<site>_<date>_falsecolour.png`.
 Polygons were drawn in chip pixel coordinates and converted to WGS84 via
-each chip's own EPSG:32612 transform.
+the chip's UTM transform. Each feature's `source_crs` names the zone.
+
+**Correction (2026-10-08):** two sites (16-14-018-26W4, 07-30-018-26W4) were
+interpreted on Sentinel-2 tile 11UQS (UTM zone 11, EPSG:32611) but converted
+with EPSG:32612, which put them exactly 6° of longitude east of their sites
+(~-107.4°). They were re-converted with the correct zone and now sit at their
+sites; shapes and confidence classes are unchanged. See each feature's
+`crs_fix` note. A test checks every footprint lies within 1 km of its site.
 
 Interpreter rule: disturbance = a contiguous low-vegetation (dark) patch
 around the centroid, distinct from surrounding fields. Where no such patch

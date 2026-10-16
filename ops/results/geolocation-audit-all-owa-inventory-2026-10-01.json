@@ -1,0 +1,24 @@
+{
+  "n_sites": 22057,
+  "n_verified": 21340,
+  "n_unverified": 717,
+  "legacy_offset_m": {
+    "n": 21340,
+    "min": 117.73859234318908,
+    "p05": 1076.525125076884,
+    "median": 2712.0669941824117,
+    "p95": 4533.697222305829,
+    "max": 5704.904067404645,
+    "within_300m": 10,
+    "within_500m": 19
+  },
+  "verified_sites_whose_legacy_500m_square_contains_the_well": 67,
+  "flag_counts": {
+    "licence_not_in_st37": 31,
+    "st37_label_disagrees_with_owa_site_name": 328,
+    "component_not_a_well": 310,
+    "st37_lsd_differs_same_section": 51,
+    "no_licence_number": 41,
+    "st37_coordinate_missing_or_outside_alberta": 7
+  }
+}

@@ -8,7 +8,9 @@
     <array>
         <string>/bin/bash</string>
         <string>-lc</string>
-        <!-- EDIT paths to match your checkout, then load with launchctl -->
+        <!-- EDIT /path/to/reclamation-evidence-ledger to your checkout (and the
+             log paths below if you want them outside /tmp), then load with
+             launchctl. macOS only; see README "Recurring run" for cron. -->
         <string>cd /path/to/reclamation-evidence-ledger &amp;&amp; .venv/bin/python -m ledger.pipeline run-monthly</string>
     </array>
     <!-- Monthly during growing season only (May=5 .. Sep=9). Snow months skip. -->

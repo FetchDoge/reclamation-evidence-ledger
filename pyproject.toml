@@ -39,6 +39,8 @@ reclamation-memo = "ledger.memo:main"
 reclamation-render = "ledger.render:main"
 reclamation-sites = "ledger.sites:main"
 reclamation-imagery = "ledger.imagery:main"
+reclamation-geolocate = "ledger.geolocate:main"
+reclamation-placebo = "ledger.placebo:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
