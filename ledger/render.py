@@ -28,7 +28,7 @@ PAGE_TMPL = """<!doctype html>
 <style>
 body{{font-family:system-ui,sans-serif;max-width:70ch;margin:2rem auto;padding:0 1rem;line-height:1.5}}
 .tier{{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-weight:600}}
-.detected{{background:#fff3cd}} .identified{{background:#d1ecf1}}
+.detected{{background:#fff3cd}} .identified{{background:#d1ecf1}} .not_assessable{{background:#e2e3e5;border:1px dashed #6c757d}}
 table{{border-collapse:collapse;width:100%}} th,td{{border:1px solid #ccc;padding:.4rem;text-align:left}}
 .caveat{{background:#f8f9fa;border-left:4px solid #999;padding:.5rem 1rem;margin:.5rem 0}}
 footer{{margin-top:3rem;font-size:.85rem;color:#555;border-top:1px solid #ccc;padding-top:1rem}}
@@ -68,10 +68,27 @@ def render_packet(packet: dict, chart_file: str | None = None) -> str:
         for s in packet["provenance"]["sources"]
     )
     s = packet["site"]
+    loc = s.get("location")
+    loc_html = (
+        f"<p class='caveat'>Location: <b>{_esc(loc['status'])}</b> — {_esc(loc['source'])}"
+        f"{'; ±' + _esc(round(loc['uncertainty_m'])) + ' m nominal' if loc.get('uncertainty_m') else ''}."
+        f" {_esc(loc['method'])}</p>"
+        if loc
+        else "<p class='caveat'>Location provenance: not recorded (legacy packet; see "
+        "NEGATIVE-RESULT-2026-10-09.md).</p>"
+    )
+    na = c.get("not_assessable_reasons") or []
+    na_html = (
+        "<p class='caveat'><b>Why no claim is made:</b> "
+        + _esc("; ".join(na))
+        + ". Not assessable is a normal result of this screen, not a finding about the site.</p>"
+        if na
+        else ""
+    )
     chart_html = (
         f'<h3>NDVI time series</h3><p><img src="assets/{_esc(chart_file)}" '
         f'alt="per-scene NDVI time series" style="max-width:100%"></p>'
-        if chart_file
+        if chart_file and packet["observations"]
         else ""
     )
     return PAGE_TMPL.format(
@@ -81,9 +98,11 @@ def render_packet(packet: dict, chart_file: str | None = None) -> str:
 <h2>Site {_esc(s["site_id"])}</h2>
 <p>{_esc(s.get("name", ""))} — {_esc(s["latitude"])}, {_esc(s["longitude"])}<br>
 OWA stage: <b>{_esc(s["owa_stage"])}</b> (inventory {_esc(s.get("owa_inventory_date", ""))})</p>
-<h3>Claim <span class="tier {c["tier"]}">{_esc(c["tier"]).upper()}</span></h3>
+{loc_html}
+<h3>Claim <span class="tier {c["tier"]}">{_esc(c["tier"]).replace("_", " ").upper()}</span></h3>
 <p><b>{_esc(c["statement"])}</b> — {_esc(c["rationale"])}<br>
-Confidence: {_esc(c["confidence"])}</p>
+Confidence: {_esc(c.get("confidence", "n/a"))}</p>
+{na_html}
 {chart_html}
 {caveats}
 <h3>Observations</h3>
@@ -120,7 +139,7 @@ def render_index_map(packets: list[dict], pages: list[str]) -> str:
                 "page": page,
                 "tier": packet["claim"]["tier"],
                 "statement": packet["claim"]["statement"],
-                "confidence": packet["claim"]["confidence"],
+                "confidence": packet["claim"].get("confidence", "n/a"),
                 "color": _marker_color(packet["claim"]["statement"]),
             }
         )
@@ -189,8 +208,8 @@ def main() -> None:
         c = packet["claim"]
         rows.append(
             f"<tr><td><a href='{page}'>{_esc(packet['packet_id'])}</a></td>"
-            f"<td><span class='tier {c['tier']}'>{_esc(c['tier'])}</span></td>"
-            f"<td>{_esc(c['statement'])}</td><td>{_esc(c['confidence'])}</td></tr>"
+            f"<td><span class='tier {c['tier']}'>{_esc(c['tier'].replace('_', ' '))}</span></td>"
+            f"<td>{_esc(c['statement'])}</td><td>{_esc(c.get('confidence', 'n/a'))}</td></tr>"
         )
         pages.append(page)
         objs.append(packet)

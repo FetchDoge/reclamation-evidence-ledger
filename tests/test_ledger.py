@@ -199,7 +199,13 @@ def _make_synthetic_chips_and_registry(base_dir: Path, site_id: str = "SYNTH-SIT
             )
         scenes.append({"date": d, "scene_id": f"S2_{stamp}", "chips": chip_meta})
 
-    manifest = {"scenes": scenes, "query": {"synthetic": True}, "rejections": []}
+    manifest = {
+        "scenes": scenes,
+        "query": {"synthetic": True},
+        "rejections": [],
+        "latitude": 51.0,
+        "longitude": -114.0,
+    }
     (chips_dir / "manifest.json").write_text(json.dumps(manifest))
 
     reg_df = pd.DataFrame(
@@ -216,6 +222,20 @@ def _make_synthetic_chips_and_registry(base_dir: Path, site_id: str = "SYNTH-SIT
     )
     reg_path = base_dir / "sites.parquet"
     reg_df.to_parquet(reg_path)
+    pd.DataFrame(
+        [
+            {
+                "site_id": site_id,
+                "status": "verified",
+                "latitude": 51.0,
+                "longitude": -114.0,
+                "source": "synthetic verified source",
+                "method": "test fixture",
+                "uncertainty_m": 100.0,
+                "flags": "",
+            }
+        ]
+    ).to_parquet(base_dir / "geolocation.parquet")
     return chips_dir, reg_path
 
 
@@ -251,6 +271,8 @@ def test_pipeline_rerun_deterministic(tmp_path):
                 str(chips_path),
                 "--registry",
                 str(registry_path),
+                "--geolocation",
+                str(registry_path.parent / "geolocation.parquet"),
                 "--baseline-start",
                 "2023",
                 "--baseline-end",

@@ -47,7 +47,7 @@ def build_packet(
     packet_id = f"{site['site_id']}_{assessment['period'].replace(' ', '_')}"
     return {
         "packet_id": packet_id,
-        "schema_version": "1.1.0",
+        "schema_version": "1.2.0",
         "site": site,
         "assessment_date": datetime.now(UTC).date().isoformat(),
         "claim": {
@@ -56,6 +56,11 @@ def build_packet(
             "rationale": assessment["rationale"],
             "confidence": assessment["confidence"],
             "caveats": assessment["caveats"],
+            **(
+                {"not_assessable_reasons": assessment["not_assessable_reasons"]}
+                if assessment.get("not_assessable_reasons")
+                else {}
+            ),
         },
         "observations": observations,
         "transforms": [{**t, "at": t.get("at", datetime.now(UTC).isoformat())} for t in transforms],

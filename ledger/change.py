@@ -7,6 +7,9 @@ The core interpretive rule, from imagery tradecraft:
                    across multiple observations (a hypothesis)
     attributed   — a named party is responsible (NEVER emitted by code;
                    requires human review and ground truth)
+    not_assessable — the screen declines to make a claim (unverified
+                   location, too few matched months, ...). First-class result,
+                   never a failure and never counted against a site.
 
 The pipeline's job ends at "identified", and only with caveats attached.
 """
@@ -41,7 +44,7 @@ class Assessment:
     n_baseline_obs: int
     n_current_obs: int
     matched_months: list  # calendar months compared month-for-month
-    tier: str  # "detected" | "identified"
+    tier: str  # "detected" | "identified" (not_assessable is decided in cmd_assess)
     statement: str
     rationale: str
     caveats: list
@@ -248,36 +251,157 @@ def _monthly_medians(scenes: list[dict], years: list[int]) -> dict[int, list[flo
     return out
 
 
+def _location_block(loc: dict) -> dict:
+    return {
+        "status": loc["status"],
+        "source": loc["source"],
+        "method": loc["method"],
+        "uncertainty_m": loc["uncertainty_m"],
+        "flags": list(loc.get("flags") or []),
+    }
+
+
+def _write_not_assessable(args, r, loc, reasons, period):
+    """Write a schema-valid packet whose tier is not_assessable (first-class result)."""
+    from datetime import date as date_cls
+
+    from .packet import build_packet, write_packet
+
+    if loc is None:
+        loc = {
+            "status": "unverified",
+            "source": "none",
+            "method": "location unverified: no geolocation record for this site",
+            "uncertainty_m": None,
+            "flags": [],
+            "latitude": float(r["latitude"]),
+            "longitude": float(r["longitude"]),
+        }
+    unverified = loc["status"] != "verified"
+    site_block = {
+        "site_id": str(r["site_id"]),
+        "name": str(r["name"]),
+        "latitude": float(loc["latitude"] if loc["latitude"] is not None else r["latitude"]),
+        "longitude": float(loc["longitude"] if loc["longitude"] is not None else r["longitude"]),
+        "owa_stage": str(r["owa_stage"]),
+        "owa_inventory_date": OWA_INVENTORY_MONTH,
+        "location": _location_block(loc),
+    }
+    statement = "not assessable"
+    rationale = (
+        "The screen declines to make a claim for this site. Reasons: "
+        + "; ".join(reasons)
+        + ". This is a statement about what the screen can support, not about the "
+        "condition of the land."
+    )
+    caveats = [
+        "Not assessable is a normal, first-class result of this screen; it is not a finding about the site or its licensee.",
+        "This screen never certifies reclamation and is not a compliance determination.",
+    ]
+    if unverified:
+        caveats.append(
+            "Published coordinates are the legacy approximation (median error ~2.7 km, "
+            "NEGATIVE-RESULT-2026-10-09.md); they do not locate the well. No imagery "
+            "from this location may be read as evidence about the site."
+        )
+    packet = build_packet(
+        site=site_block,
+        assessment={
+            "tier": "not_assessable",
+            "statement": statement,
+            "rationale": rationale,
+            "confidence": "low",
+            "period": period,
+            "caveats": caveats,
+            "not_assessable_reasons": reasons,
+        },
+        observations=[],
+        chips=[],
+        transforms=[
+            {
+                "step": "location_gate",
+                "tool": "ledger.geolocate.location_gate",
+                "parameters": {
+                    "status": loc["status"],
+                    "source": loc["source"],
+                    "flags": list(loc.get("flags") or []),
+                    "reasons": reasons,
+                },
+            }
+        ],
+        sources=[
+            {
+                "name": "OWA site-specific inventory (Excel)",
+                "url": OWA_INVENTORY_URL,
+                "accessed": date_cls.today().isoformat(),
+                "license_note": "public data",
+            }
+        ],
+    )
+    out = write_packet(packet, args.out)
+    print(f"{args.site}: NOT_ASSESSABLE — {'; '.join(reasons)}")
+    print(f"  packet: {out}")
+    return out
+
+
 def cmd_assess(args):
     from datetime import date as date_cls
     from pathlib import Path
 
     import pandas as pd
 
+    from .geolocate import haversine_m, load_location, location_gate
     from .packet import build_packet, write_packet
 
     chips_dir = Path(args.chips)
-    scenes, manifest = _scene_means(chips_dir)
-    if not scenes:
-        raise SystemExit(f"no usable scenes in {chips_dir}")
 
     baseline_years = list(range(args.baseline_start, args.baseline_end + 1))
     current_years = _parse_years(args.assessment)
-    base_monthly = _monthly_medians(scenes, baseline_years)
-    cur_monthly = _monthly_medians(scenes, current_years)
     period = (
         f"{min(current_years)}-{max(current_years)} growing seasons"
         if len(current_years) > 1
         else f"{current_years[0]} growing season"
     )
 
-    a = assess(args.site, base_monthly, cur_monthly, period)
-
     registry = pd.read_parquet(args.registry)
     row = registry[registry.site_id == args.site]
     if len(row) == 0:
         raise SystemExit(f"site {args.site} not found in {args.registry}")
     r = row.iloc[0]
+
+    # --- Location gate (ledger.geolocate): nothing above not_assessable unless
+    # the site's coordinates were verified AND the chips were fetched there.
+    geo_path = Path(args.geolocation)
+    loc = load_location(geo_path, args.site) if geo_path.exists() else None
+    loc_ok, na_reasons = location_gate(loc)
+    scenes, manifest = [], None
+    if chips_dir.is_dir():
+        try:
+            scenes, manifest = _scene_means(chips_dir)
+        except Exception:  # noqa: BLE001 - no usable chips is itself a reason
+            scenes, manifest = [], None
+    if loc_ok and manifest is not None:
+        mlat, mlon = manifest.get("latitude"), manifest.get("longitude")
+        if mlat is None or mlon is None:
+            loc_ok = False
+            na_reasons = ["chips_location_unrecorded_in_manifest"]
+        else:
+            off = haversine_m(loc["latitude"], loc["longitude"], float(mlat), float(mlon))
+            if off > 50.0:
+                loc_ok = False
+                na_reasons = [f"chips_not_at_verified_location:{off:.0f}m_from_verified_point"]
+    a = None
+    if loc_ok:
+        if not scenes:
+            raise SystemExit(f"no usable scenes in {chips_dir}")
+        base_monthly = _monthly_medians(scenes, baseline_years)
+        cur_monthly = _monthly_medians(scenes, current_years)
+        try:
+            a = assess(args.site, base_monthly, cur_monthly, period)
+        except ValueError as e:
+            na_reasons = [f"insufficient_matched_months: {e}"]
+    if a is None:
+        return _write_not_assessable(args, r, loc, na_reasons, period)
 
     observations = [
         {
@@ -358,7 +482,7 @@ def cmd_assess(args):
         {
             "step": "packet_build",
             "tool": "ledger.packet.build_packet",
-            "parameters": {"schema_version": "1.1.0"},
+            "parameters": {"schema_version": "1.2.0"},
         },
     ]
     sources = [
@@ -381,10 +505,9 @@ def cmd_assess(args):
         },
     ]
     caveats = list(a.caveats) + [
-        f"Site coordinates: {r['geo_method']}. Coordinate accuracy was "
-        "withdrawn 2026-10-09 after a published diagnosis measured a median "
-        "error of 2,658 m (NEGATIVE-RESULT-2026-10-09.md). Do not screen on "
-        "these positions.",
+        f"Site coordinates: {loc['source']} ({loc['method']}); nominal uncertainty "
+        f"{loc['uncertainty_m']:.0f} m. This pins the licensed surface hole, not the "
+        "visible pad footprint.",
         "Sentinel-2's 10 m pixels cannot resolve individual wellheads.",
         "Chip download used GDAL_HTTP_UNSAFESSL on a TLS-intercepting egress "
         "proxy; payload integrity rests on S3-hosted COGs, not TLS pinning.",
@@ -394,10 +517,11 @@ def cmd_assess(args):
         site={
             "site_id": str(r["site_id"]),
             "name": str(r["name"]),
-            "latitude": float(r["latitude"]),
-            "longitude": float(r["longitude"]),
+            "latitude": float(loc["latitude"]),
+            "longitude": float(loc["longitude"]),
             "owa_stage": str(r["owa_stage"]),
             "owa_inventory_date": OWA_INVENTORY_MONTH,
+            "location": _location_block(loc),
         },
         assessment={
             "tier": a.tier,
@@ -459,6 +583,12 @@ def main() -> None:
     a.add_argument("--site", required=True, help="site_id as in the registry")
     a.add_argument("--chips", required=True, help="data/chips/<safe site dir>")
     a.add_argument("--registry", default="data/sites.parquet")
+    a.add_argument(
+        "--geolocation",
+        default="data/geolocation.parquet",
+        help="output of `python -m ledger.geolocate resolve`; without a verified "
+        "record the site is not_assessable",
+    )
     a.add_argument("--baseline-start", type=int, default=2023)
     a.add_argument("--baseline-end", type=int, default=2024)
     a.add_argument(

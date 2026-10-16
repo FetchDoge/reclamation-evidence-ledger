@@ -320,6 +320,12 @@ def main() -> None:
         "--sites", required=True, help="text file, one site_id per line (as in the registry)"
     )
     f.add_argument("--registry", default="data/sites.parquet")
+    f.add_argument(
+        "--geolocation",
+        default=None,
+        help="output of `ledger.geolocate resolve`: fetch at VERIFIED coordinates only; "
+        "sites without a verified location are skipped (they stay not_assessable)",
+    )
     f.add_argument("--start", default="2023-05-01")
     f.add_argument("--end", default="2026-08-31")
     f.add_argument("--out", default="data/chips")
@@ -341,6 +347,15 @@ def main() -> None:
     missing = set(wanted) - set(sites.site_id)
     if missing:
         print(f"WARNING: {len(missing)} site_ids not in registry: {sorted(missing)[:5]}")
+    if args.geolocation:
+        geo = pd.read_parquet(args.geolocation)
+        ok = geo[geo.status == "verified"].set_index("site_id")
+        skipped = sorted(set(sites.site_id) - set(ok.index))
+        if skipped:
+            print(f"SKIP {len(skipped)} sites without a verified location, e.g. {skipped[:3]}")
+        sites = sites[sites.site_id.isin(ok.index)].copy()
+        sites["latitude"] = sites.site_id.map(ok["latitude"])
+        sites["longitude"] = sites.site_id.map(ok["longitude"])
     print(
         f"fetching chips for {len(sites)} sites "
         f"({args.start}..{args.end}, max {args.max_scenes}/site)"

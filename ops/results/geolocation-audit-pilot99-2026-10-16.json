@@ -1,0 +1,17 @@
+{
+  "n_sites": 99,
+  "n_verified": 99,
+  "n_unverified": 0,
+  "legacy_offset_m": {
+    "n": 99,
+    "min": 1165.3811873783673,
+    "p05": 1397.4006838485368,
+    "median": 2405.420211891277,
+    "p95": 3910.689346387445,
+    "max": 4377.531871106716,
+    "within_300m": 0,
+    "within_500m": 0
+  },
+  "verified_sites_whose_legacy_500m_square_contains_the_well": 0,
+  "flag_counts": {}
+}

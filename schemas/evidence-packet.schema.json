@@ -76,12 +76,21 @@
           "type": "string"
         },
         "tier": {
-          "description": "Pipeline output is never 'attributed'. Attribution requires human review.",
           "enum": [
+            "not_assessable",
             "detected",
             "identified"
           ],
-          "type": "string"
+          "type": "string",
+          "description": "Pipeline output is never 'attributed'. 'not_assessable' is a first-class result: the screen declines to make a claim (see not_assessable_reasons). Attribution requires human review."
+        },
+        "not_assessable_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Why no claim is made, e.g. location_unverified, insufficient_matched_months, chips_not_at_verified_location."
         }
       },
       "required": [
@@ -196,8 +205,12 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "1.1.0",
-      "type": "string"
+      "enum": [
+        "1.1.0",
+        "1.2.0"
+      ],
+      "type": "string",
+      "description": "1.1.0 = legacy (pre-geolocation-gate) packets, kept for the published record. 1.2.0 = location-gated packets with the not_assessable tier."
     },
     "site": {
       "properties": {
@@ -229,6 +242,41 @@
         },
         "uwi": {
           "type": "string"
+        },
+        "location": {
+          "type": "object",
+          "required": [
+            "status",
+            "source",
+            "method"
+          ],
+          "description": "Provenance of the site coordinates (ledger.geolocate). Only status 'verified' may carry a claim tier above not_assessable.",
+          "properties": {
+            "status": {
+              "enum": [
+                "verified",
+                "unverified"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "method": {
+              "type": "string"
+            },
+            "uncertainty_m": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "flags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
         }
       },
       "required": [
@@ -323,5 +371,93 @@
     "provenance"
   ],
   "title": "Reclamation Evidence Packet",
-  "type": "object"
+  "type": "object",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "1.2.0"
+          }
+        },
+        "required": [
+          "schema_version"
+        ]
+      },
+      "then": {
+        "properties": {
+          "site": {
+            "required": [
+              "location"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "site": {
+            "properties": {
+              "location": {
+                "properties": {
+                  "status": {
+                    "const": "unverified"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "location"
+            ]
+          }
+        },
+        "required": [
+          "site"
+        ]
+      },
+      "then": {
+        "properties": {
+          "claim": {
+            "properties": {
+              "tier": {
+                "const": "not_assessable"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim": {
+            "properties": {
+              "tier": {
+                "const": "not_assessable"
+              }
+            },
+            "required": [
+              "tier"
+            ]
+          }
+        },
+        "required": [
+          "claim"
+        ]
+      },
+      "then": {
+        "properties": {
+          "claim": {
+            "required": [
+              "not_assessable_reasons"
+            ]
+          }
+        }
+      }
+    }
+  ]
 }
