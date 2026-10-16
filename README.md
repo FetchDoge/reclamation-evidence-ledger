@@ -16,6 +16,12 @@ An independent, low-cost satellite screen. It uses free Sentinel-2 imagery and a
 
 The dashboard (`docs/index.html`) renders from the packets themselves with `python ops/render_dashboard.py`. It shows the audit story, the 99-site findings register, per-site dossiers with NDVI time series, the method, and the ongoing self-audit. It computes every packet-derived number (sites, published tiers, deltas, CIs, render stamp) at render time. The figures in Plates I and V (the 2026-09-27 verification traces and the BACI probe notes) are typed from those audit notes, and the dashboard labels them that way.
 
+## Where this stands (2026-10-16) and what's next
+
+- **Locations:** 21,340 of 22,057 OWA inventory sites now have a verified AER ST37 surface-hole location; 717 are refused as "location unverified" ([details](ops/results/geolocation-verification-2026-10-16.md)). The old DLS geocoder was a median ~2.7 km off.
+- **Control (no-well) placebo:** the CI-gated rule flagged 3 of 98 no-well points as `identified` (3.1%, 95% upper bound 8.6%; pass line <= 5%, committed before the run). The earlier rule flagged 13 of 98 and failed. This reran points I had already seen, so it is a regression check, not independent confirmation, and does not show the screen detects reclamation. See [`placebo/`](placebo/) and [STAGE0-2026-10-16.md](STAGE0-2026-10-16.md).
+- **Next:** [NEXT-STEPS.md](NEXT-STEPS.md). In short, a fresh pre-registered control run, a pad-vs-ring test at 10 m, and three buyer interviews; if the control passes and the interviews are positive, build it, and if either fails, stop.
+
 ## What it guarantees
 
 - **A tier is earned, not assumed.** The screen rule (`ci-gated-v2`) allows `identified` only when |median matched-month NDVI delta| ≥ 0.08 **and** a bootstrap 95% CI (≥ 4 matched months) **and** a CI that excludes zero. **While the publication hold is active (since 2026-10-10) the published tier is `detected – screening only` for every site**; the screen result is kept in each packet as `claim.screen_tier_internal` for internal tracking, and the schema rejects a published `identified` while the hold is on.

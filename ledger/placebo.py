@@ -33,7 +33,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .change import _monthly_medians, _scene_means, assess
+from .change import TIER_RULE, _monthly_medians, _scene_means, assess
 from .geolocate import load_st37
 
 PASS_MAX_SHARE = 0.05  # must equal the committed pre-registration
@@ -110,6 +110,7 @@ def evaluate_point(chips_dir: Path) -> dict:
         "matched_months": len(a.matched_months),
         "n_scenes": len(scenes),
         "audit_rule_flag": audit_rule(a.delta, a.delta_ci95),
+        "delta_only_flag": abs(a.delta) >= 0.08,
         "manifest_lat": manifest.get("latitude"),
         "manifest_lon": manifest.get("longitude"),
     }
@@ -179,6 +180,7 @@ def run(args) -> dict:
         "verdict": verdict,
         "secondary": {
             "n_audit_rule_flag": int(assessed.audit_rule_flag.sum()),
+            "n_delta_only_flag": int(assessed.delta_only_flag.sum()),
             "share_positive_delta": float((deltas > 0).mean()) if len(deltas) else None,
             "delta_median": float(deltas.median()) if len(deltas) else None,
             "delta_p05": float(deltas.quantile(0.05)) if len(deltas) else None,
@@ -187,7 +189,8 @@ def run(args) -> dict:
         "all_chip_hashes_verified": bool(
             df.get("chips_hash_all_ok", pd.Series([True])).fillna(False).all()
         ),
-        "method": "ledger.change.assess, baseline 2023-2024 vs 2025-2026, thresholds +/-0.08 (unchanged)",
+        "tier_rule": TIER_RULE,
+        "method": "ledger.change.assess, baseline 2023-2024 vs 2025-2026, thresholds +/-0.08",
     }
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
