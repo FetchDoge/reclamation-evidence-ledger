@@ -2,6 +2,7 @@
 "use strict";
 var LEDGER = window.RECLAMATION_LEDGER_DATA || {sites: [], agg: {}};  // from ledger-data.js (generated)
 var sites = LEDGER.sites, agg = LEDGER.agg;
+var PAGES_URL = LEDGER.pages_url || 'https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/';
 var NS = 'http://www.w3.org/2000/svg';
 function css(v){ return getComputedStyle(document.body).getPropertyValue(v).trim(); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -104,7 +105,7 @@ function renderTable(){
       '<td class="num">'+fmtD(s.delta)+'</td>'+
       '<td class="num">'+esc(ciStr(s.ci))+'</td>'+
       '<td class="num">'+s.mm.join(',')+'</td>'+
-      '<td><a href="https://fetchdoge.github.io/reclamation-evidence-ledger/'+s.page+'" target="_blank" rel="noopener">packet&nbsp;\u2197</a></td>';
+      '<td><a href="'+PAGES_URL+s.page+'" target="_blank" rel="noopener">packet&nbsp;\u2197</a></td>';
     tr.addEventListener('click', function(ev){
       if(ev.target.tagName==='A') return;
       selectSite(s.id);
@@ -146,7 +147,7 @@ function renderDossier(s){
   dm.innerHTML='<span>'+s.lat+', '+s.lon+'</span>'+
     '<span>'+s.nobs+' scenes</span><span>'+s.nchips+' chips</span>'+
     '<span>matched months: '+s.mm.map(function(m){return MONTHS[m];}).join(', ')+'</span>'+
-    '<span><a href="https://fetchdoge.github.io/reclamation-evidence-ledger/'+s.page+'" target="_blank" rel="noopener">full evidence packet \u2197</a></span>';
+    '<span><a href="'+PAGES_URL+s.page+'" target="_blank" rel="noopener">full evidence packet \u2197</a></span>';
   host.appendChild(dm);
   // time series
   var W=920,H=360,ml=56,mr=16,mt=26,mb=46;

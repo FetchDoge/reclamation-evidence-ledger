@@ -117,3 +117,9 @@ def test_site_boundaries_and_limits_displayed():
         html = (SITE_DIR / page).read_text(encoding="utf-8")
         assert "No compliance or reclamation certification" in html
         assert "No contamination status" in html
+
+
+def test_portal_links_use_generated_pages_url():
+    ledger_js = (SITE_DIR / "ledger.js").read_text(encoding="utf-8")
+    assert "fetchdoge.github.io" not in ledger_js
+    assert "pages_url" in ledger_js
