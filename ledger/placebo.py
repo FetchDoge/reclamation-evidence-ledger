@@ -103,6 +103,7 @@ def evaluate_point(chips_dir: Path) -> dict:
     return {
         "result": "assessed",
         "tier": a.tier,
+        "direction": a.direction,
         "statement": a.statement,
         "delta": a.delta,
         "ci_lo": a.delta_ci95[0] if a.delta_ci95 else None,
@@ -117,6 +118,14 @@ def evaluate_point(chips_dir: Path) -> dict:
 
 
 def run(args) -> dict:
+    out = Path(args.out)
+    run_files = [out / n for n in ("results.csv", "summary.json", "SHA256SUMS.json")]
+    if not getattr(args, "overwrite", False) and any(p.exists() for p in run_files):
+        raise SystemExit(
+            f"refusing to overwrite existing placebo run in {out}: "
+            + ", ".join(p.name for p in run_files if p.exists())
+            + " (pass --overwrite to replace it)"
+        )
     prereg = Path(args.prereg)
     prereg_sha = verify_prereg(prereg)
     pts = pd.read_csv(args.points)
@@ -160,9 +169,16 @@ def run(args) -> dict:
     else:
         verdict = "FAIL"
     deltas = assessed.delta.astype(float)
+    ident_dirs = (
+        assessed.loc[assessed.tier == "identified", "direction"]
+        if len(assessed) and "direction" in assessed
+        else pd.Series(dtype=object)
+    )
     summary = {
         "prereg_file": str(prereg),
         "prereg_sha256": prereg_sha,
+        "st37_file": str(args.st37),
+        "st37_sha256": sha256_file(args.st37),
         "pass_line_max_share_identified": PASS_MAX_SHARE,
         "n_points": int(len(df)),
         "n_eligible": int(n),
@@ -171,10 +187,8 @@ def run(args) -> dict:
         "n_refused": refused,
         "n_no_scenes": undocumented,
         "n_identified": flagged,
-        "n_identified_recovering": int((assessed.statement == "vegetation recovering").sum()),
-        "n_identified_stalled": int(
-            (assessed.statement == "vegetation stalled or regressing").sum()
-        ),
+        "n_identified_increase": int((ident_dirs == "increase").sum()),
+        "n_identified_decrease": int((ident_dirs == "decrease").sum()),
         "share_identified": flagged / n if n else None,
         "wilson95_upper": wilson_upper(flagged, n),
         "verdict": verdict,
@@ -192,13 +206,13 @@ def run(args) -> dict:
         "tier_rule": TIER_RULE,
         "method": "ledger.change.assess, baseline 2023-2024 vs 2025-2026, thresholds +/-0.08",
     }
-    out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     df.to_csv(out / "results.csv", index=False)
     (out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     manifest = {p.name: sha256_file(p) for p in (out / "results.csv", out / "summary.json")}
     manifest["prereg"] = prereg_sha
     manifest["points_csv"] = sha256_file(args.points)
+    manifest["st37"] = sha256_file(args.st37)
     (out / "SHA256SUMS.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
     return summary
@@ -239,6 +253,11 @@ def main() -> None:
     r.add_argument("--chips-root", required=True, help="dir with one chips folder per null_id")
     r.add_argument("--st37", required=True)
     r.add_argument("--out", required=True)
+    r.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="replace the results of an existing run in --out (default: refuse)",
+    )
     g = sub.add_parser("gate")
     g.add_argument("--summary", required=True)
     args = ap.parse_args()
