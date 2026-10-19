@@ -260,3 +260,64 @@ def test_gate_exit_codes(tmp_path):
         s.write_text(json.dumps({**base, "verdict": verdict}))
         ns = type("N", (), {"summary": str(s)})()
         assert placebo.gate(ns) == code
+
+
+def test_schema_rejects_nonempty_log_marked_not_reviewed():
+    p = _na_packet()
+    p["provenance"]["review"] = {
+        "status": "not_reviewed",
+        "log": [{"reviewer": "r", "date": "2026-10-16", "scope": "s", "outcome": "o"}],
+    }
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(p, SCHEMA)
+    p["provenance"]["review"]["status"] = "reviewed"
+    jsonschema.validate(p, SCHEMA)
+
+
+def test_resolve_registry_prefers_the_well_component(tmp_path):
+    from ledger.geolocate import resolve_registry
+
+    owa = pd.DataFrame(
+        [
+            {
+                "Site Name": "01-01-002-19W4 (100)",
+                "License Number": "9999999",
+                "Component Type": "Pipeline",
+                "Licensee": "X",
+                "Responsible Department": "d",
+                "Current Project Type": "t",
+            },
+            {
+                "Site Name": "01-01-002-19W4 (100)",
+                "License Number": "260210",
+                "Component Type": "Well & Access Road",
+                "Licensee": "X",
+                "Responsible Department": "d",
+                "Current Project Type": "t",
+            },
+        ]
+    )
+    path = tmp_path / "owa.xlsx"
+    owa.to_excel(path, index=False)
+    out = resolve_registry(path, ST, ["01-01-002-19W4 (100)"])
+    assert len(out) == 1
+    assert out.iloc[0]["status"] == "verified"
+    assert out.iloc[0]["licence"] == "0260210"
+
+
+def test_placebo_run_refuses_to_overwrite_existing_run(tmp_path):
+    from types import SimpleNamespace
+
+    out = tmp_path / "run"
+    out.mkdir()
+    (out / "summary.json").write_text("{}\n")
+    args = SimpleNamespace(
+        out=str(out),
+        prereg="unused",
+        points="unused",
+        chips_root="unused",
+        st37="unused",
+        overwrite=False,
+    )
+    with pytest.raises(SystemExit, match="refusing to overwrite"):
+        placebo.run(args)

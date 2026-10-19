@@ -42,7 +42,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from .sites import dls_to_latlon, load_owa, parse_dls
+from .sites import dls_to_latlon, load_owa, parse_dls, read_owa_raw
 
 ST37_URL = "https://www.aer.ca/prd/documents/sts/st37/ST_37_Excel.zip"
 ST37_PAGE = "https://www.aer.ca/data-and-performance-reports/statistical-reports/st37"
@@ -313,6 +313,30 @@ def load_extras(path: str | Path) -> dict[str, list[Candidate]]:
     return out
 
 
+def _site_components(owa_path: str | Path) -> dict[str, list[tuple[str, str]]]:
+    """site name -> [(licence, component_type), ...] in workbook order.
+
+    load_owa() collapses each site to its FIRST component row, so a site
+    whose first row is a facility or pipeline would be resolved against the
+    wrong component. The resolver needs every component row to find the
+    well. Returns {} if the raw workbook cannot be read (callers then fall
+    back to the collapsed registry row)."""
+    try:
+        raw = read_owa_raw(owa_path)
+    except Exception:  # noqa: BLE001 - fallback is the registry row
+        return {}
+    if "Site Name" not in raw:
+        return {}
+    lics = raw["License Number"].astype(str) if "License Number" in raw else [""] * len(raw)
+    comps = raw["Component Type"].astype(str) if "Component Type" in raw else [""] * len(raw)
+    out: dict[str, list[tuple[str, str]]] = {}
+    for name, lic, comp in zip(raw["Site Name"], lics, comps, strict=True):
+        if pd.isna(name):
+            continue
+        out.setdefault(str(name), []).append((lic, comp))
+    return out
+
+
 def resolve_registry(
     owa_path: str | Path,
     st37: pd.DataFrame,
@@ -322,15 +346,19 @@ def resolve_registry(
     reg = load_owa(owa_path)
     if site_ids is not None:
         reg = reg[reg.site_id.isin(site_ids)]
+    components = _site_components(owa_path)
     rows = []
     for r in reg.itertuples():
-        loc = resolve_site(
-            r.site_id, r.license_number, r.component_type, st37, (extras or {}).get(r.site_id)
-        )
+        licence, comp = r.license_number, r.component_type
+        for cand_lic, cand_comp in components.get(r.site_id, []):
+            if "well" in str(cand_comp).lower():
+                licence, comp = cand_lic, cand_comp
+                break
+        loc = resolve_site(r.site_id, licence, comp, st37, (extras or {}).get(r.site_id))
         d = asdict(loc)
         d["flags"] = ";".join(loc.flags)
         d["candidates"] = json.dumps(loc.candidates)
-        d["licence"] = norm_licence(r.license_number)
+        d["licence"] = norm_licence(licence)
         rows.append(d)
     return pd.DataFrame(rows)
 
