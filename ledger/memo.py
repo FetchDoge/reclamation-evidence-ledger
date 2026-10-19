@@ -14,7 +14,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 
-def _triage_recommendation(delta: float | None, tier: str, confidence: str) -> str:
+def _triage_recommendation(
+    delta: float | None, tier: str, confidence: str, ci: list | None = None
+) -> str:
     if tier == "not_assessable":
         return "Not assessable: the screen makes no claim (see packet reasons). Not a finding about the site."
     if delta is None:
@@ -23,6 +25,20 @@ def _triage_recommendation(delta: float | None, tier: str, confidence: str) -> s
         return "Walk First: Negative vegetation trend. Priority field inspection."
     if delta >= 0.08 and tier == "identified":
         return "Candidate: Positive recovery signal identified across seasons."
+    if delta >= 0.08 and tier == "detected":
+        # Beyond threshold but not "identified": either the change is not
+        # supported (no CI, or the CI includes zero) or a supported call is
+        # being published as "detected" under the publication hold. Neither
+        # is a within-envelope result, so neither may say so.
+        if ci is None or ci[0] <= 0 <= ci[1]:
+            return (
+                "Monitor: Change beyond threshold (delta >= +0.08) but not "
+                "supported — 95% CI absent or includes zero. Regular orbital watch."
+            )
+        return (
+            "Candidate (withheld): CI-supported positive signal published as "
+            "'detected' under the publication hold."
+        )
     return "Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch."
 
 
@@ -107,7 +123,7 @@ def build_validation_memo(packets: list[dict], title: str = "Screening Validatio
         else:
             ci_str = "Not estimated"
 
-        action = _triage_recommendation(delta, tier, conf)
+        action = _triage_recommendation(delta, tier, conf, ci)
         lines.append(
             f"| {rank} | `{site_id}` | {name} | {stage} | {delta_str} | {ci_str} | {tier} | {conf} | {action} |"
         )

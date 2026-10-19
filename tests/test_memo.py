@@ -50,3 +50,14 @@ def test_memo_cli_execution(tmp_path):
     assert "99-Site Pilot Validation Memo" in content
     assert "Total Sites Screened" in content
     assert "99" in content
+
+
+def test_triage_unsupported_threshold_crossing_is_not_called_neutral():
+    from ledger.memo import _triage_recommendation
+
+    no_ci = _triage_recommendation(0.12, "detected", "low", None)
+    assert "not supported" in no_ci and "neutral envelope" not in no_ci
+    ci_includes_zero = _triage_recommendation(0.12, "detected", "low", [-0.02, 0.20])
+    assert "not supported" in ci_includes_zero
+    neutral = _triage_recommendation(0.03, "detected", "low", None)
+    assert "neutral envelope" in neutral
