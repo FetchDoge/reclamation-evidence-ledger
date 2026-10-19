@@ -451,12 +451,17 @@ def main() -> None:
         print(f"no registry/provenance at {reg_path}: skipping OWA re-check")
     head = _git_head()
 
-    changes = []
+    # Preflight: build and validate EVERY packet before rewriting ANY, so a
+    # failure mid-corpus cannot leave the packets partially re-tiered.
+    staged = []
     for p in sorted((ROOT / "packets").glob("*.json")):
         packet, change = retier(
             json.loads(p.read_text()), lineage, owa_recheck, registry, args.date, head
         )
         jsonschema.validate(packet, SCHEMA)
+        staged.append((p, packet, change))
+    changes = []
+    for p, packet, change in staged:
         p.write_text(json.dumps(packet, indent=2))
         changes.append(change)
     write_diff(changes, args.tag, args.date, head, owa_recheck, lin)
