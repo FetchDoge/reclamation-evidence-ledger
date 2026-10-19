@@ -358,6 +358,13 @@
                 "minItems": 1
               }
             }
+          },
+          "else": {
+            "properties": {
+              "log": {
+                "maxItems": 0
+              }
+            }
           }
         },
         "owa_inventory_file": {
