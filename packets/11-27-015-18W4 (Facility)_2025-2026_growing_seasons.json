@@ -1,6 +1,6 @@
 {
   "packet_id": "11-27-015-18W4 (Facility)_2025-2026_growing_seasons",
-  "schema_version": "1.1.0",
+  "schema_version": "1.3.0",
   "site": {
     "site_id": "11-27-015-18W4 (Facility)",
     "name": "11-27-015-18W4 (Facility)",
@@ -11,19 +11,37 @@
   },
   "assessment_date": "2026-09-28",
   "claim": {
-    "tier": "identified",
-    "statement": "vegetation recovering",
-    "rationale": "Median matched-month NDVI delta +0.16 (median of 4 matched-month deltas; baseline median 0.40, current median 0.68; 95% CI [-0.125, +0.442]).",
+    "tier": "detected",
+    "direction": "increase",
+    "statement": "detected \u2013 screening only",
+    "rationale": "Median matched-month NDVI delta +0.156 in the analysis square (median of 4 matched-month deltas; baseline median 0.40, current median 0.68; 95% CI [-0.125, +0.442]). Site-level 'identified' calls are withheld pending a surrounding-land (pad-vs-ring) baseline: no-well control points still produced 3/100 'identified' under the current rule (Seedling Lab no-well test, 2026-10-08).",
     "confidence": "medium",
+    "tier_rule": "ci-gated-v2",
     "caveats": [
+      "Site-level 'identified' calls are withheld pending a surrounding-land (pad-vs-ring) baseline: no-well control points still produced 3/100 'identified' under the current rule (Seedling Lab no-well test, 2026-10-08).",
       "10 m pixels cannot resolve wellheads; this is a vegetation screen, not a compliance verdict.",
       "Drought years depress NDVI independent of reclamation progress.",
       "Baseline and current periods are compared month-for-month (matched months: [5, 6, 7, 8]) to avoid seasonal sampling bias.",
       "Uncertainty is a bootstrap 95% CI over 4 matched-month deltas.",
-      "Site coordinates are DLS LSD centroids (~\u00b1300 m; DLS LSD centroid (~+/-300 m; road allowances ignored)). The 500 m analysis buffer absorbs this uncertainty; this is not a survey of the wellhead.",
+      "Screening only: not legal proof, not a reclamation certification or compliance verdict, and not a methane, soil, contamination or subsurface measurement.",
+      "The 500 m buffer (~1 km\u00b2 square) is mostly land around the pad; the NDVI change describes that square, not the pad itself, and regional weather (e.g. the 2023 drought in the baseline years) moves it too.",
+      "The bootstrap CI resamples matched months drawn from the same two baseline and two current years: it measures within-season consistency, not year-to-year variability.",
+      "Site coordinates are DLS LSD centroids derived from the site name (road allowances ignored). Their accuracy was withdrawn on 2026-10-09: the published diagnosis (NEGATIVE-RESULT-2026-10-09.md) measured a median geocoding error of 2,658 m across 20,000 wells, and at the 99 pilot sites 0 of 99 analysis squares contain their well. Do not screen on these positions; this is not a survey of the wellhead.",
       "Sentinel-2's 10 m pixels cannot resolve individual wellheads.",
-      "Chip download used GDAL_HTTP_UNSAFESSL on a TLS-intercepting egress proxy; payload integrity rests on S3-hosted COGs, not TLS pinning."
-    ]
+      "Chips for this packet were downloaded with GDAL_HTTP_UNSAFESSL (TLS verification off) on a TLS-intercepting egress proxy; integrity rests on the recorded per-chip SHA-256 and the cited source_url, not TLS."
+    ],
+    "publication_hold": {
+      "active": true,
+      "since": "2026-10-10",
+      "reason": "Site-level 'identified' calls are withheld pending a surrounding-land (pad-vs-ring) baseline: no-well control points still produced 3/100 'identified' under the current rule (Seedling Lab no-well test, 2026-10-08)."
+    },
+    "screen_tier_internal": {
+      "tier": "detected",
+      "direction": "increase",
+      "statement": "change beyond threshold, not supported: 95% CI includes zero",
+      "rationale": "The median matched-month NDVI delta +0.16 (median of 4 matched-month deltas; baseline median 0.40, current median 0.68; 95% CI [-0.125, +0.442]) is beyond \u00b10.08, but the 95% CI includes zero, so the change is not supported.",
+      "rule": "ci-gated-v2"
+    }
   },
   "observations": [
     {
@@ -302,7 +320,10 @@
         ],
         "seasonal_aggregation": "month-matched median deltas (each calendar month compared only to itself)",
         "recover_delta": 0.08,
-        "stall_delta": -0.08
+        "stall_delta": -0.08,
+        "min_matched_months_for_ci": 4,
+        "tier_rule": "ci-gated-v2",
+        "tier_rule_text": "identified only if |median matched-month NDVI delta| >= threshold AND a bootstrap 95% CI exists (>= 4 matched months) AND the CI excludes zero; otherwise detected"
       },
       "at": "2026-09-28T01:59:30.232999+00:00"
     },
@@ -310,7 +331,7 @@
       "step": "packet_build",
       "tool": "ledger.packet.build_packet",
       "parameters": {
-        "schema_version": "1.1.0"
+        "schema_version": "1.3.0"
       },
       "at": "2026-09-28T01:59:30.233001+00:00"
     }
@@ -322,7 +343,9 @@
       "sha256": "cba66d8b1bf0ab3c4f1916bef07226c561383462591f9e26a7584e1f91f6cdb0",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230513_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/5/S2A_12UUA_20230513_0_L2A/B04.tif"
     },
     {
       "date": "2023-05-13",
@@ -330,7 +353,9 @@
       "sha256": "e5cfe9f00882fdcaded1be5ad59f8bc42eaa9da0e68498eb9788d4a0addbef8b",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230513_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/5/S2A_12UUA_20230513_0_L2A/B08.tif"
     },
     {
       "date": "2023-05-13",
@@ -338,7 +363,9 @@
       "sha256": "6a3f4b5742550cc73fff6368ebc87ff9f30e167a618c9ce7f3ff8cb5c07c5a06",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230513_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/5/S2A_12UUA_20230513_0_L2A/B11.tif"
     },
     {
       "date": "2023-05-13",
@@ -346,7 +373,9 @@
       "sha256": "2e3fe0fefbbdfea69a8512c326e960e803aef181e6df5687ed9e537613e8342f",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230513_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/5/S2A_12UUA_20230513_0_L2A/B02.tif"
     },
     {
       "date": "2023-05-13",
@@ -354,7 +383,9 @@
       "sha256": "8d5fb437e51e3037cf03b24b87e151c90aa6abc61771efa9b57d2edf4d285c50",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230513_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/5/S2A_12UUA_20230513_0_L2A/SCL.tif"
     },
     {
       "date": "2023-06-07",
@@ -362,7 +393,9 @@
       "sha256": "26ef74186952bdb9baacfcf234f766af9588cb6091b063babc31e4577a49603f",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20230607_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/6/S2B_12UUA_20230607_0_L2A/B04.tif"
     },
     {
       "date": "2023-06-07",
@@ -370,7 +403,9 @@
       "sha256": "19cb4d260434ad93554f6439fa5f1572b1e3809fe6497de117796df60045811b",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20230607_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/6/S2B_12UUA_20230607_0_L2A/B08.tif"
     },
     {
       "date": "2023-06-07",
@@ -378,7 +413,9 @@
       "sha256": "24bd360db1f2735def93757a426f2540245aaa6a245cf714d87448fa4e72f3db",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20230607_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/6/S2B_12UUA_20230607_0_L2A/B11.tif"
     },
     {
       "date": "2023-06-07",
@@ -386,7 +423,9 @@
       "sha256": "80e4a49d6c16104305f142d89ad146bb74c457791fa8edd56f7c86dda6c7a732",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20230607_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/6/S2B_12UUA_20230607_0_L2A/B02.tif"
     },
     {
       "date": "2023-06-07",
@@ -394,7 +433,9 @@
       "sha256": "ca7b71f9b6adf5edc5999c804807a2afc918a78c3a49e6a9ceafb22356147649",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20230607_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/6/S2B_12UUA_20230607_0_L2A/SCL.tif"
     },
     {
       "date": "2023-07-02",
@@ -402,7 +443,9 @@
       "sha256": "e072e33f527f8b40272e1eb87266ad0c8a653a6b10620bd3d4fe76bb1132fb83",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230702_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/7/S2A_12UUA_20230702_0_L2A/B04.tif"
     },
     {
       "date": "2023-07-02",
@@ -410,7 +453,9 @@
       "sha256": "3d0779a96d25fd424e40dc5bf63228b59e929243cf15f9dddb57c8800b1c69f1",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230702_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/7/S2A_12UUA_20230702_0_L2A/B08.tif"
     },
     {
       "date": "2023-07-02",
@@ -418,7 +463,9 @@
       "sha256": "52a36a3a653149d10415ce3f20279b28cd5341d662ed54bebda30e0f629167fd",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230702_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/7/S2A_12UUA_20230702_0_L2A/B11.tif"
     },
     {
       "date": "2023-07-02",
@@ -426,7 +473,9 @@
       "sha256": "2bb32927b26401c76d08110cfb9f9a5bbce755e811ba3640f948922af71db2a6",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230702_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/7/S2A_12UUA_20230702_0_L2A/B02.tif"
     },
     {
       "date": "2023-07-02",
@@ -434,7 +483,9 @@
       "sha256": "1581c3b43a72f616164b7dd21371b250d7289e3e41b02f53dc576f3fbd916c02",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20230702_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2023/7/S2A_12UUA_20230702_0_L2A/SCL.tif"
     },
     {
       "date": "2023-08-01",
@@ -442,7 +493,9 @@
       "sha256": "6f456c40ca28592ae7f30ea83331f0626354e4cb963799c24f0da4c9ff9b1e74",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20230801_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2A_12UVA_20230801_0_L2A/B04.tif"
     },
     {
       "date": "2023-08-01",
@@ -450,7 +503,9 @@
       "sha256": "d2656b7294646d0689e31ff170bd849063e0102c8e3aa083bd6530e6b62bc01a",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20230801_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2A_12UVA_20230801_0_L2A/B08.tif"
     },
     {
       "date": "2023-08-01",
@@ -458,7 +513,9 @@
       "sha256": "981a06704d5380f100bc4417b25ba9f3a46136261ced46c0df03c697325dcf14",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20230801_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2A_12UVA_20230801_0_L2A/B11.tif"
     },
     {
       "date": "2023-08-01",
@@ -466,7 +523,9 @@
       "sha256": "55cc2c03ef2ff92053955a1cebb73cf7bb8fe1c53072f284c1c6d239984fdfbe",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20230801_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2A_12UVA_20230801_0_L2A/B02.tif"
     },
     {
       "date": "2023-08-01",
@@ -474,7 +533,9 @@
       "sha256": "1e2691a20c80b5494ce6075690d45294ca138d3925806050655b354d68117483",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20230801_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2A_12UVA_20230801_0_L2A/SCL.tif"
     },
     {
       "date": "2023-08-26",
@@ -482,7 +543,9 @@
       "sha256": "df8d25e3419315e20e32ba1a443c707061310c95934e0a3e84643433935fb3ee",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20230826_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2B_12UVA_20230826_0_L2A/B04.tif"
     },
     {
       "date": "2023-08-26",
@@ -490,7 +553,9 @@
       "sha256": "888b76843edbea6aa39fea44d22ccc819f7ebafa62b3bd9f2bbd81cd087d83e0",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20230826_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2B_12UVA_20230826_0_L2A/B08.tif"
     },
     {
       "date": "2023-08-26",
@@ -498,7 +563,9 @@
       "sha256": "36edc25720307411ed886d000ce6f234415aa8308df7c035ae80a29b6801f4db",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20230826_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2B_12UVA_20230826_0_L2A/B11.tif"
     },
     {
       "date": "2023-08-26",
@@ -506,7 +573,9 @@
       "sha256": "4e80b23f2fb31d4c1154e311807cb3d314a60300ed46004c167697b330044672",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20230826_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2B_12UVA_20230826_0_L2A/B02.tif"
     },
     {
       "date": "2023-08-26",
@@ -514,7 +583,9 @@
       "sha256": "19aef5a61c2243bb0b18e9e356abfe9671dfd2aa4e960e86bff99df657c324e9",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20230826_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2023/8/S2B_12UVA_20230826_0_L2A/SCL.tif"
     },
     {
       "date": "2024-06-21",
@@ -522,7 +593,9 @@
       "sha256": "f0d84bafa9be92a1308c2ac3fb172a41b0e125a98e0ea64c0fc9c63aa43c988b",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20240621_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2024/6/S2B_12UVA_20240621_0_L2A/B04.tif"
     },
     {
       "date": "2024-06-21",
@@ -530,7 +603,9 @@
       "sha256": "60917a9c7d7d42856042900030148a5596654d0a602de52d7cd223f8b8712ebd",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20240621_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2024/6/S2B_12UVA_20240621_0_L2A/B08.tif"
     },
     {
       "date": "2024-06-21",
@@ -538,7 +613,9 @@
       "sha256": "01d97ca2931108e6d8d1cedde7be25b8dcc668183075987644c766eb7c830db5",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20240621_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2024/6/S2B_12UVA_20240621_0_L2A/B11.tif"
     },
     {
       "date": "2024-06-21",
@@ -546,7 +623,9 @@
       "sha256": "6197e3c5e4ac6f1948fae8ac8f8fea54d6f39efd8b5c8739a786f53f12b6754f",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20240621_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2024/6/S2B_12UVA_20240621_0_L2A/B02.tif"
     },
     {
       "date": "2024-06-21",
@@ -554,7 +633,9 @@
       "sha256": "717baee977d29d6a956dbb7a5140ce587cc555534196e656e46fbbf61bc7571b",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20240621_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2024/6/S2B_12UVA_20240621_0_L2A/SCL.tif"
     },
     {
       "date": "2024-07-21",
@@ -562,7 +643,9 @@
       "sha256": "cd29d6ee9b8522c7661fd065e3ad8a5e6a21ca28554475d5a0cd6a14bfcdaf26",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20240721_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/7/S2B_12UUA_20240721_0_L2A/B04.tif"
     },
     {
       "date": "2024-07-21",
@@ -570,7 +653,9 @@
       "sha256": "f93d948e770689ae9c35d22548518f63d502c1d254bb7d6302f3cc58d3a6d7d6",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20240721_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/7/S2B_12UUA_20240721_0_L2A/B08.tif"
     },
     {
       "date": "2024-07-21",
@@ -578,7 +663,9 @@
       "sha256": "cf214629f69248a311ffadbbc91095aebced83f90eed01c009ca9c0e44311709",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20240721_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/7/S2B_12UUA_20240721_0_L2A/B11.tif"
     },
     {
       "date": "2024-07-21",
@@ -586,7 +673,9 @@
       "sha256": "d36a23ae432c83c3f35bf2080f038172fed42291e74cf570a1492b195bd6d122",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20240721_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/7/S2B_12UUA_20240721_0_L2A/B02.tif"
     },
     {
       "date": "2024-07-21",
@@ -594,7 +683,9 @@
       "sha256": "7173f3f0cedf23a14107b89f637fc3dd96ae95abcf89c0bc27246079df0a58f7",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20240721_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/7/S2B_12UUA_20240721_0_L2A/SCL.tif"
     },
     {
       "date": "2024-08-25",
@@ -602,7 +693,9 @@
       "sha256": "74bc4c47e5fa20dd726aadb2fc356feac9aaffcc35a42845d074c509810acb2f",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20240825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/8/S2A_12UUA_20240825_0_L2A/B04.tif"
     },
     {
       "date": "2024-08-25",
@@ -610,7 +703,9 @@
       "sha256": "83aa0a3cbbf69917e5d218f510083fc720e01320e39b2e6e7dea545aeebd9f88",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20240825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/8/S2A_12UUA_20240825_0_L2A/B08.tif"
     },
     {
       "date": "2024-08-25",
@@ -618,7 +713,9 @@
       "sha256": "06f79bd9687118113443f78355ba46567717e9d9121461094625d482350a5d95",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20240825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/8/S2A_12UUA_20240825_0_L2A/B11.tif"
     },
     {
       "date": "2024-08-25",
@@ -626,7 +723,9 @@
       "sha256": "e3dc4cf94493abb6f393e5310b68bd84860c148455715088c1de05de69dd0279",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20240825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/8/S2A_12UUA_20240825_0_L2A/B02.tif"
     },
     {
       "date": "2024-08-25",
@@ -634,7 +733,9 @@
       "sha256": "0560aecfd0b34904f8d6a14c4988753b8d91965d5c92969eeeb229d8cb9b0f2b",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2A_12UUA_20240825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2024/8/S2A_12UUA_20240825_0_L2A/SCL.tif"
     },
     {
       "date": "2025-06-01",
@@ -642,7 +743,9 @@
       "sha256": "d8e9488c2cfbfb2ad7efa5e06143b0d30e1142fa21ee157c545dbc7cda841997",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20250601_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/6/S2C_12UVA_20250601_0_L2A/B04.tif"
     },
     {
       "date": "2025-06-01",
@@ -650,7 +753,9 @@
       "sha256": "f6d32b44a1773a44e9ff719ab85c448520ab120fd515c0aade3f3ea70823ab2e",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20250601_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/6/S2C_12UVA_20250601_0_L2A/B08.tif"
     },
     {
       "date": "2025-06-01",
@@ -658,7 +763,9 @@
       "sha256": "d4dd5dc89535d5a8668249f64041f3b1d0c2cd61556d8bea42cdf45f01d055e4",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20250601_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/6/S2C_12UVA_20250601_0_L2A/B11.tif"
     },
     {
       "date": "2025-06-01",
@@ -666,7 +773,9 @@
       "sha256": "134d0fcf5709f7ede4d8b599f550090ee949c81a718a0d7334cfc90ce589c41f",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20250601_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/6/S2C_12UVA_20250601_0_L2A/B02.tif"
     },
     {
       "date": "2025-06-01",
@@ -674,7 +783,9 @@
       "sha256": "c7fdf90144eb2df8f7ed01b92a1f4edc09d048769cc5bba2f046721552824579",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20250601_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/6/S2C_12UVA_20250601_0_L2A/SCL.tif"
     },
     {
       "date": "2025-07-01",
@@ -682,7 +793,9 @@
       "sha256": "c2e53728e21464841ea961ce6f86157db2043c2f654c2c18d4b04b2206dc150b",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20250701_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/7/S2C_12UUA_20250701_0_L2A/B04.tif"
     },
     {
       "date": "2025-07-01",
@@ -690,7 +803,9 @@
       "sha256": "5ad47a6df42f23e250fa099d444c40f8b646e493a7f82994896788cdd329efd8",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20250701_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/7/S2C_12UUA_20250701_0_L2A/B08.tif"
     },
     {
       "date": "2025-07-01",
@@ -698,7 +813,9 @@
       "sha256": "7374966da720fc3e113c5859fe8be19c4564d9f12bd44171d269368d98e4745e",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20250701_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/7/S2C_12UUA_20250701_0_L2A/B11.tif"
     },
     {
       "date": "2025-07-01",
@@ -706,7 +823,9 @@
       "sha256": "d13e0bf2042838fc2dcb6cab242034fd2ff11d4e09fddb8161a46782b9f586dd",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20250701_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/7/S2C_12UUA_20250701_0_L2A/B02.tif"
     },
     {
       "date": "2025-07-01",
@@ -714,7 +833,9 @@
       "sha256": "7c53de315d628a669ffad2935b925ccfecc5dc56d86dd8a6c051f17a6c6d91e7",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20250701_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/7/S2C_12UUA_20250701_0_L2A/SCL.tif"
     },
     {
       "date": "2025-07-26",
@@ -722,7 +843,9 @@
       "sha256": "622384c7cbc285e000984c262b1a4e094f2c83bbbe9b5f347444b1e6cfe1a919",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20250726_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/7/S2B_12UVA_20250726_0_L2A/B04.tif"
     },
     {
       "date": "2025-07-26",
@@ -730,7 +853,9 @@
       "sha256": "f3ee900c53c7d70b12efec9458de133d9cd7f7d136f4c4e00e00dc29733a3056",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20250726_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/7/S2B_12UVA_20250726_0_L2A/B08.tif"
     },
     {
       "date": "2025-07-26",
@@ -738,7 +863,9 @@
       "sha256": "e6ed43784f2b04c6b34aabe5517676706c380750aa33754f79d5d0653435eaf5",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20250726_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/7/S2B_12UVA_20250726_0_L2A/B11.tif"
     },
     {
       "date": "2025-07-26",
@@ -746,7 +873,9 @@
       "sha256": "0e0bc3a292ce2a3135ea2839011dfa95a5f2c4b747bc17ebf80aa4c691f12a15",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20250726_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/7/S2B_12UVA_20250726_0_L2A/B02.tif"
     },
     {
       "date": "2025-07-26",
@@ -754,7 +883,9 @@
       "sha256": "e7f8828c582c4224860d2d7bfde3cae33ac2cb0d0278c73bef470773cd2697cd",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20250726_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/7/S2B_12UVA_20250726_0_L2A/SCL.tif"
     },
     {
       "date": "2025-08-25",
@@ -762,7 +893,9 @@
       "sha256": "00d72993f3b9c327c7876aa29c3cf6fb2745ce24cb16fa9097abd8e3d1010c14",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20250825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/8/S2B_12UUA_20250825_0_L2A/B04.tif"
     },
     {
       "date": "2025-08-25",
@@ -770,7 +903,9 @@
       "sha256": "4d014617f6eb5b76711fb2aa73e47c97c2d86d780bcf82c024e72171c0ed88e4",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20250825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/8/S2B_12UUA_20250825_0_L2A/B08.tif"
     },
     {
       "date": "2025-08-25",
@@ -778,7 +913,9 @@
       "sha256": "365aa0d690fe62c015b69e74721bbca543496fa9966e1f45ccb1974d5307710b",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20250825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/8/S2B_12UUA_20250825_0_L2A/B11.tif"
     },
     {
       "date": "2025-08-25",
@@ -786,7 +923,9 @@
       "sha256": "e06fa43f2cfdf3f268dbf40d53205bb4db436736c0a48d10c97927a1c6673f6e",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20250825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/8/S2B_12UUA_20250825_0_L2A/B02.tif"
     },
     {
       "date": "2025-08-25",
@@ -794,7 +933,9 @@
       "sha256": "d61331e47af5d06b64e91d408d7b8662b24e07f2c1524fae8d9cdef674f82865",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20250825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2025/8/S2B_12UUA_20250825_0_L2A/SCL.tif"
     },
     {
       "date": "2025-09-11",
@@ -802,7 +943,9 @@
       "sha256": "99f51e5e5dcfcf4f2f05d6541b2ea7def0f7a043aabbcb4d4101a1b3dd610e11",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20250911_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/9/S2A_12UVA_20250911_0_L2A/B04.tif"
     },
     {
       "date": "2025-09-11",
@@ -810,7 +953,9 @@
       "sha256": "499f86015dbb97aceffbe4e57a5a1c38f2b8fe0775eddeb1122350e53ffc8871",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20250911_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/9/S2A_12UVA_20250911_0_L2A/B08.tif"
     },
     {
       "date": "2025-09-11",
@@ -818,7 +963,9 @@
       "sha256": "5142e1c72e56a30099f23e963c6da8278d243d03bc864faaba84f06680cc1856",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20250911_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/9/S2A_12UVA_20250911_0_L2A/B11.tif"
     },
     {
       "date": "2025-09-11",
@@ -826,7 +973,9 @@
       "sha256": "fdf84137ef4ccc8ad6b47863d73be47f7b5e7f899bd19a377bb66d21ccd570e5",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20250911_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/9/S2A_12UVA_20250911_0_L2A/B02.tif"
     },
     {
       "date": "2025-09-11",
@@ -834,7 +983,9 @@
       "sha256": "204ea34dc996397939cba61c8f35a6f6b8a32d898b1d7967db99454d4a95a3a4",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2A_12UVA_20250911_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2025/9/S2A_12UVA_20250911_0_L2A/SCL.tif"
     },
     {
       "date": "2026-05-12",
@@ -842,7 +993,9 @@
       "sha256": "8a76531e0eec660ffa80aaab75c4e10a9db1bf91af2e3623835ef9bae40ec9ba",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20260512_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/5/S2B_12UUA_20260512_0_L2A/B04.tif"
     },
     {
       "date": "2026-05-12",
@@ -850,7 +1003,9 @@
       "sha256": "3300999496653acd3b9b541730fcab6b958a9413d5e7338fb513344a62d9e084",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20260512_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/5/S2B_12UUA_20260512_0_L2A/B08.tif"
     },
     {
       "date": "2026-05-12",
@@ -858,7 +1013,9 @@
       "sha256": "bf91ca019cfedae865a8c7e6ca2bf4b46d149bb57258f5370d60e421f9e5c501",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20260512_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/5/S2B_12UUA_20260512_0_L2A/B11.tif"
     },
     {
       "date": "2026-05-12",
@@ -866,7 +1023,9 @@
       "sha256": "73430abe1a1878b1ba7e2e937e84017c3fc0ddeb33db0ce6f32845bcc512a0d5",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20260512_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/5/S2B_12UUA_20260512_0_L2A/B02.tif"
     },
     {
       "date": "2026-05-12",
@@ -874,7 +1033,9 @@
       "sha256": "2dcacabafe33ec4d5220fa94bd21847f115f879205905907e9f5222b8993de6d",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UUA_20260512_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/5/S2B_12UUA_20260512_0_L2A/SCL.tif"
     },
     {
       "date": "2026-07-16",
@@ -882,7 +1043,9 @@
       "sha256": "77b7ff07f3554282b1d62fc87df4400bdbbb5a1eb907ec16c4765a540dcac8e1",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20260716_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/7/S2C_12UVA_20260716_0_L2A/B04.tif"
     },
     {
       "date": "2026-07-16",
@@ -890,7 +1053,9 @@
       "sha256": "d6acdf6cb769a8fb41e0fda3e252affa7034624eb61193b1a7f7519438c81056",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20260716_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/7/S2C_12UVA_20260716_0_L2A/B08.tif"
     },
     {
       "date": "2026-07-16",
@@ -898,7 +1063,9 @@
       "sha256": "7b5661ccfce34fd5df27cf25cf850d77d106ac29b4feb3844dd50b11871697bb",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20260716_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/7/S2C_12UVA_20260716_0_L2A/B11.tif"
     },
     {
       "date": "2026-07-16",
@@ -906,7 +1073,9 @@
       "sha256": "ee76b4e1fa8e539fd3e2c2076d335c56b552818b5a6d42c17f30ba8a0ee114a9",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20260716_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/7/S2C_12UVA_20260716_0_L2A/B02.tif"
     },
     {
       "date": "2026-07-16",
@@ -914,7 +1083,9 @@
       "sha256": "bbe2ee3318ca437ce93d02cf8cf8ffd76ba2e4127b2ebe3ffd0f43bf5ed18850",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2C_12UVA_20260716_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/7/S2C_12UVA_20260716_0_L2A/SCL.tif"
     },
     {
       "date": "2026-08-10",
@@ -922,7 +1093,9 @@
       "sha256": "0ef58d1a03f7d3cfce8671f88c9db87fdbfef20dc4e66b37c45e3767298786ae",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20260810_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/8/S2B_12UVA_20260810_0_L2A/B04.tif"
     },
     {
       "date": "2026-08-10",
@@ -930,7 +1103,9 @@
       "sha256": "0447b2342c2efe2019342ea2f8a84aed057a23a6a095705d047a9b7ba11d3e38",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20260810_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/8/S2B_12UVA_20260810_0_L2A/B08.tif"
     },
     {
       "date": "2026-08-10",
@@ -938,7 +1113,9 @@
       "sha256": "c2ebf5023479db8a9f4e6b801350c19b0cb66c32f81b99b561ba2f02859eadcb",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20260810_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/8/S2B_12UVA_20260810_0_L2A/B11.tif"
     },
     {
       "date": "2026-08-10",
@@ -946,7 +1123,9 @@
       "sha256": "e0c9daef8e5c533ba41985df8e89a709f080d2757a3e32fefe580923549b24eb",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20260810_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/8/S2B_12UVA_20260810_0_L2A/B02.tif"
     },
     {
       "date": "2026-08-10",
@@ -954,7 +1133,9 @@
       "sha256": "37993b7c0c3d3e76480b4226f1bc3e1f53f70f73ece26be9db59941e867f273d",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2B_12UVA_20260810_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/VA/2026/8/S2B_12UVA_20260810_0_L2A/SCL.tif"
     },
     {
       "date": "2026-08-25",
@@ -962,7 +1143,9 @@
       "sha256": "ddd06cff4118038ac4e2c0a3558bb65cb29615a9a042d33f14efb94e5cdf0432",
       "bands": [
         "red"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20260825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/8/S2C_12UUA_20260825_0_L2A/B04.tif"
     },
     {
       "date": "2026-08-25",
@@ -970,7 +1153,9 @@
       "sha256": "8e137a4186686bf70e715e0debe2ae9a0061a95ec8634fa8d6878d5440a0fbc2",
       "bands": [
         "nir"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20260825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/8/S2C_12UUA_20260825_0_L2A/B08.tif"
     },
     {
       "date": "2026-08-25",
@@ -978,7 +1163,9 @@
       "sha256": "b6983954242e3f997be794a9a6608470125947decd40de64bbffd8f25215c12c",
       "bands": [
         "swir"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20260825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/8/S2C_12UUA_20260825_0_L2A/B11.tif"
     },
     {
       "date": "2026-08-25",
@@ -986,7 +1173,9 @@
       "sha256": "b6fd6b64020a77b746182e16492472f4af4d816dc152df11dd3eac919d8b89d9",
       "bands": [
         "blue"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20260825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/8/S2C_12UUA_20260825_0_L2A/B02.tif"
     },
     {
       "date": "2026-08-25",
@@ -994,7 +1183,9 @@
       "sha256": "8e56da566c827c44cb50e6152ccafe508ea9bb04466c645ed4f16ec01898d78e",
       "bands": [
         "scl"
-      ]
+      ],
+      "scene_id": "S2C_12UUA_20260825_0_L2A",
+      "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/12/U/UA/2026/8/S2C_12UUA_20260825_0_L2A/SCL.tif"
     }
   ],
   "provenance": {
@@ -1018,7 +1209,65 @@
       }
     ],
     "generated_at": "2026-09-28T01:59:30.233005+00:00",
-    "generated_by": "reclamation-ledger pipeline (human-reviewed before publish)"
+    "generated_by": "reclamation-ledger pipeline (automated; no human review recorded)",
+    "review": {
+      "status": "not_reviewed",
+      "log": []
+    },
+    "lineage_audit": {
+      "record": "ledger/data/radiometric_lineage.json",
+      "audit_date": "2026-10-08",
+      "scenes_in_packet": 17,
+      "scenes_audited": 17
+    },
+    "owa_inventory_file": {
+      "url": null,
+      "file_name": null,
+      "file_date": "2026-09-01",
+      "sha256": null,
+      "retrieved_at": null,
+      "note": "Not recorded at assessment time: the pre-M1 pipeline used a hardcoded file month and kept no URL or checksum, so the exact file cannot be verified. See owa_recheck."
+    },
+    "owa_recheck": {
+      "url": "https://cdn.prod.website-files.com/66a3c445f4f5971ff9791464/6abec5fc76d30264647ccc54_Reporting%20-%20Full%20Inventory%20-%202026-10-01%2013.41.42.xlsx",
+      "file_name": "6abec5fc76d30264647ccc54_Reporting - Full Inventory - 2026-10-01 13.41.42.xlsx",
+      "file_date": "2026-10-01",
+      "sha256": "4e877df60c20b086ed9742abd0f3fc23e074e28a240c8577a4170f975e07bbd0",
+      "checked_on": "2026-10-10",
+      "site_found": true,
+      "owa_stage": "reclamation",
+      "coordinates_match": true
+    },
+    "revisions": [
+      {
+        "date": "2026-10-08",
+        "tool": "ops/retier_packets.py",
+        "code_commit": "0ceffee2ee95e6f3a4b15a3b1fac8d5fbad638c9",
+        "change": "re-tiered under ci-gated-v2; provenance fields added; unrecorded 'human-reviewed' stamp removed",
+        "previous_tier": "identified",
+        "previous_statement": "vegetation recovering",
+        "new_tier": "detected",
+        "new_statement": "change beyond threshold, not supported: 95% CI includes zero",
+        "reason": "delta +0.156 beyond \u00b10.08 but 95% CI [-0.125, +0.442] includes zero"
+      },
+      {
+        "date": "2026-10-10",
+        "tool": "ops/retier_packets.py",
+        "code_commit": "4a15cda2871d7662317a41258095f9e694a00374",
+        "change": "publication hold applied: published tier set to 'detected \u2013 screening only'; CI-gated result kept in claim.screen_tier_internal",
+        "previous_tier": "detected",
+        "previous_statement": "change beyond threshold, not supported: 95% CI includes zero",
+        "new_tier": "detected",
+        "new_statement": "detected \u2013 screening only",
+        "reason": "Site-level 'identified' calls are withheld pending a surrounding-land (pad-vs-ring) baseline: no-well control points still produced 3/100 'identified' under the current rule (Seedling Lab no-well test, 2026-10-08)."
+      },
+      {
+        "date": "2026-10-10",
+        "tool": "ops/withdraw_coord_caveat.py",
+        "code_commit": "06a5eeb45450bc8a94e110abe4153e9edd5f659c",
+        "change": "coordinate caveat replaced: the former DLS-centroid accuracy claim ('absorbed by the 500 m buffer') was withdrawn 2026-10-09 (NEGATIVE-RESULT-2026-10-09.md); tier and measurements unchanged"
+      }
+    ]
   },
   "baseline": {
     "period": "2023-2024",

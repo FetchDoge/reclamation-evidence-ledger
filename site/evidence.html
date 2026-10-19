@@ -4,12 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>99-Site Evidence Register — Reclamation Evidence</title>
-  <meta name="description" content="Searchable register of 99 analysis packets across 13 Western Canadian energy licensees. Real Sentinel-2 deltas and confidence intervals.">
+  <meta name="description" content="Searchable register of 99 screening-only analysis packets. Sentinel-2 deltas and confidence intervals; site-level calls withheld pending re-scoring.">
   <link rel="stylesheet" href="style.css">
+  <script src="ledger-data.js"></script>
   <script src="ledger.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
+
+  <!-- PUBLICATION HOLD + NOTICE 2026-10-09 (kept in sync with docs/index.html) -->
+  <aside id="ledger-hold-banner" role="alert" style="border:3px solid #92400e; background:#fffbeb; color:#78350f; padding:14px 20px; font-size:14px; line-height:1.5; text-align:center">
+    <b>RE-SCORING IN PROGRESS (OCT 2026).</b> Site-level calls are withheld pending a surrounding-land baseline; every site is published as <i>detected &ndash; screening only</i>.
+    <b>Notice 2026-10-09:</b> the screening results did not hold up under pre-registered testing (median geocoding error 2,658&nbsp;m) and are not evidence of recovery at any well.
+    <a href="https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/NEGATIVE-RESULT-2026-10-09.html" style="color:#78350f; font-weight:700">Read the negative result &rarr;</a>
+  </aside>
 
   <!-- Institutional Telemetry Command Header Bar -->
   <aside class="top-command-bar" aria-label="System Telemetry">
@@ -50,17 +58,17 @@
           <h1 class="brand-title">Reclamation Evidence</h1>
         </a>
       </div>
-      <p class="brand-subtitle">Public Evidence Base · 99 Analysis Packets across 13 Licensees</p>
+      <p class="brand-subtitle">Public Evidence Base · 99 Analysis Packets · Screening Only</p>
     </div>
 
     <div class="top-pills-row">
       <div class="pill-badge">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        71 Detected Recoveries
+        <span data-ledger="n_detected">99</span> published as detected &ndash; screening only
       </div>
       <div class="pill-badge">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        28 Stalled / Regressing
+        <span data-ledger="n_identified">0</span> identified (withheld)
       </div>
       <a href="order.html" class="pill-badge active-cta">
         + Order 15-Site Pilot ($7,500 CAD)
@@ -106,7 +114,7 @@
           <div>
             <h2 class="greeting-text">Verified Evidence Register</h2>
             <p style="font-size: 13px; color: var(--slate-500); margin-top: 4px;">
-              99 analysis packets across 13 licensees. 71 detected; 28 identified. Confidence: 86 medium, 10 low, 3 high.
+              <span data-ledger="n_sites">99</span> analysis packets, all published as detected &ndash; screening only; <span data-ledger="n_identified">0</span> identified (site-level calls withheld). Operator names are not published.
             </p>
           </div>
           <a href="https://fetchdoge.github.io/reclamation-evidence-ledger/" target="_blank" rel="noopener" class="btn-sample-load" style="text-decoration: none;">
@@ -117,12 +125,12 @@
         <!-- Filter Row -->
         <div class="ledger-filter-row">
           <div class="ledger-pills-filter">
-            <button class="filter-pill-btn active" data-tier="all">All Packets (99)</button>
-            <button class="filter-pill-btn" data-tier="detected">Detected Recoveries (71)</button>
-            <button class="filter-pill-btn" data-tier="identified">Stalled / Regressing (28)</button>
-            <button class="filter-pill-btn" data-tier="high">High Confidence (3)</button>
+            <button class="filter-pill-btn active" data-tier="all">All Packets (<span data-ledger="n_sites">99</span>)</button>
+            <button class="filter-pill-btn" data-tier="detected">Detected &ndash; screening only (<span data-ledger="n_detected">99</span>)</button>
+            <button class="filter-pill-btn" data-tier="identified">Identified (<span data-ledger="n_identified">0</span>, withheld)</button>
+            <button class="filter-pill-btn" data-tier="high">High Confidence (<span data-ledger="n_high">3</span>)</button>
           </div>
-          <input type="text" id="ledger-search-input" class="form-input" style="width: 260px;" placeholder="Filter by LSD or Licensee...">
+          <input type="text" id="ledger-search-input" class="form-input" style="width: 260px;" placeholder="Filter by LSD...">
         </div>
 
         <!-- Table Wrap -->
@@ -131,7 +139,6 @@
             <thead>
               <tr>
                 <th>Site LSD Identifier</th>
-                <th>Licensee</th>
                 <th>Classification</th>
                 <th>Median Delta</th>
                 <th>95% Bootstrap CI</th>
@@ -144,7 +151,7 @@
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; color: var(--slate-500);">
           <span id="ledger-showing-count">Showing 30 of 99 analysis packets</span>
-          <span>Thresholds: +0.08 recovering, −0.08 stalled/regressing</span>
+          <span>Noise band ±0.08 NDVI; site-level calls withheld during re-scoring</span>
         </div>
 
         <!-- Self-Audit Story Box -->

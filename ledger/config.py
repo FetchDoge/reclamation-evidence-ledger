@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
+
+
+def _env_flag(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
 @dataclass(frozen=True)
@@ -29,13 +34,15 @@ class Config:
     stac_url: str = "https://earth-search.aws.element84.com/v1"
     collection: str = "sentinel-2-l2a"
 
-    # TLS through the egress proxy: this environment's egress proxy terminates
-    # TLS with its own CA, which GDAL's bundled OpenSSL does not trust even
-    # though the platform CA bundle (used by curl/requests) does. When True,
-    # imagery.py sets GDAL_HTTP_UNSAFESSL so windowed /vsicurl reads work at
-    # all. No credentials or private data transit this path — only public
-    # satellite pixels from a known S3 host. Set False on a normal network.
-    trust_egress_proxy_tls: bool = True
+    # TLS verification is ON by default. Some sandboxed networks terminate
+    # TLS at an egress proxy whose CA GDAL's bundled OpenSSL does not trust;
+    # there, and only there, an operator may opt in to GDAL_HTTP_UNSAFESSL by
+    # setting LEDGER_TRUST_EGRESS_PROXY_TLS=1. Packets built while this is on
+    # say so in their caveats; packets built with it off do not carry that
+    # caveat. Only public satellite pixels transit this path.
+    trust_egress_proxy_tls: bool = field(
+        default_factory=lambda: _env_flag("LEDGER_TRUST_EGRESS_PROXY_TLS")
+    )
 
     data_dir: str = "data"
     packets_dir: str = "packets"

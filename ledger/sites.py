@@ -14,14 +14,22 @@ independent ground truth (see tests/test_geocode.py).
 Usage:
     python -m ledger.sites --out data/sites.parquet
     python -m ledger.sites --owa data/owa_inventory.xlsx --out data/sites.parquet
+
+Every run also writes <out stem>.owa_provenance.json next to the registry:
+the inventory file's URL, file date (from its OWA filename), SHA-256 and
+retrieval time. Packets cite that record instead of a hardcoded month.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import math
 import re
+import urllib.parse
 import urllib.request
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -51,7 +59,10 @@ def fetch_current_owa_url(page_url: str = OWA_INVENTORY_PAGE) -> str:
 
 
 def download_owa(dest: str | Path, url: str | None = None) -> Path:
-    """Download the current OWA monthly inventory to dest. Returns the path."""
+    """Download the current OWA monthly inventory to dest. Returns the path.
+
+    The source URL is remembered in ``_DOWNLOADED_FROM`` so the provenance
+    record written by main() names the exact file that was fetched."""
     url = url or fetch_current_owa_url()
     dest = Path(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -59,7 +70,41 @@ def download_owa(dest: str | Path, url: str | None = None) -> Path:
     with urllib.request.urlopen(req, timeout=180) as r, open(dest, "wb") as f:
         f.write(r.read())
     print(f"downloaded OWA inventory ({dest.stat().st_size / 1e6:.1f} MB) from {url}")
+    _DOWNLOADED_FROM[str(dest.resolve())] = url
     return dest
+
+
+_DOWNLOADED_FROM: dict[str, str] = {}
+_FILE_DATE_RE = re.compile(r"(20\d{2}-\d{2}-\d{2})")
+
+
+def owa_file_date(name_or_url: str) -> str | None:
+    """OWA names each monthly file with its report date, e.g.
+    'Reporting - Full Inventory - 2026-10-01 13.41.42.xlsx'. Returns that
+    date (ISO) or None when the name carries no date — never a guess."""
+    m = _FILE_DATE_RE.search(urllib.parse.unquote(name_or_url or ""))
+    return m.group(1) if m else None
+
+
+def owa_provenance(path: str | Path, url: str | None = None) -> dict:
+    """Provenance record for the inventory file actually used in a run."""
+    path = Path(path)
+    url = url or _DOWNLOADED_FROM.get(str(path.resolve()))
+    h = hashlib.sha256(path.read_bytes()).hexdigest()
+    return {
+        "url": url,
+        "page": OWA_INVENTORY_PAGE,
+        "file_name": urllib.parse.unquote(url.rsplit("/", 1)[-1]) if url else path.name,
+        "file_date": owa_file_date(url or "") or owa_file_date(path.name),
+        "sha256": h,
+        "retrieved_at": datetime.now(UTC).isoformat(timespec="seconds"),
+    }
+
+
+def provenance_path(registry: str | Path) -> Path:
+    """Where the OWA provenance record for a registry parquet lives."""
+    registry = Path(registry)
+    return registry.with_name(registry.stem + ".owa_provenance.json")
 
 
 def parse_dls(name: str) -> tuple[int, int, int, int, str] | None:
@@ -187,10 +232,17 @@ def main() -> None:
         default=None,
         help="path to OWA monthly inventory file (omit to download the current one automatically)",
     )
+    ap.add_argument(
+        "--owa-url",
+        default=None,
+        help="URL the --owa file was downloaded from (recorded in "
+        "provenance; omit only if genuinely unknown)",
+    )
     ap.add_argument("--out", required=True, help="output parquet path")
     args = ap.parse_args()
 
     owa_path = args.owa or download_owa(Path("data") / "owa_inventory_latest.xlsx")
+    prov = owa_provenance(owa_path, args.owa_url)
     sites = load_owa(owa_path)
     print(f"registry: {len(sites)} geocoded sites")
     print(sites.owa_stage.value_counts().to_string())
@@ -199,7 +251,13 @@ def main() -> None:
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     sites.to_parquet(out, index=False)
+    prov["n_geocoded_sites"] = int(len(sites))
+    provenance_path(out).write_text(json.dumps(prov, indent=2))
     print(f"wrote {out}")
+    print(
+        f"wrote {provenance_path(out)} (file_date {prov['file_date']}, "
+        f"sha256 {prov['sha256'][:12]}...)"
+    )
 
 
 if __name__ == "__main__":

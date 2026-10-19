@@ -14,42 +14,44 @@
         "interpreted_scene_date": "2026-08-08",
         "digitized_date": "2026-09-27",
         "note": "Dark low-vegetation patch ~200x350 m around the DLS centroid; boundary gradational; adjacent bright-red oval may be reclaimed ground or unrelated. Pad itself not resolved at 10 m.",
-        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey."
+        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey.",
+        "crs_fix": "2026-10-08: corrected. The interpreted scene is on Sentinel-2 tile 11UQS (UTM zone 11, EPSG:32611) but its pixel polygon was converted to WGS84 with EPSG:32612, shifting it exactly 6 degrees east (~-107.4). Re-converted via EPSG:32612 -> metres -> EPSG:32611; the polygon now sits at its site. Shape and confidence class unchanged.",
+        "source_crs": "EPSG:32611"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              -107.437768,
+              -113.437768,
               50.521597
             ],
             [
-              -107.434925,
+              -113.434925,
               50.52187
             ],
             [
-              -107.434195,
+              -113.434195,
               50.520318
             ],
             [
-              -107.434914,
+              -113.434914,
               50.518271
             ],
             [
-              -107.437053,
+              -113.437053,
               50.517977
             ],
             [
-              -107.438239,
+              -113.438239,
               50.519093
             ],
             [
-              -107.438399,
+              -113.438399,
               50.520717
             ],
             [
-              -107.437768,
+              -113.437768,
               50.521597
             ]
           ]
@@ -66,7 +68,8 @@
         "interpreted_scene_date": "2026-08-25",
         "digitized_date": "2026-09-27",
         "note": "Centroid falls inside a large section-aligned dark field; no discrete pad resolved at 10 m. Polygon traces the field parcel, NOT a disturbance.",
-        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey."
+        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey.",
+        "source_crs": "EPSG:32612"
       },
       "geometry": {
         "type": "Polygon",
@@ -106,7 +109,8 @@
         "interpreted_scene_date": "2026-08-25",
         "digitized_date": "2026-09-27",
         "note": "Centroid sits on the corner of four fields; no discrete pad resolved. Polygon traces the darker adjacent parcel as the area of interest.",
-        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey."
+        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey.",
+        "source_crs": "EPSG:32612"
       },
       "geometry": {
         "type": "Polygon",
@@ -146,30 +150,32 @@
         "interpreted_scene_date": "2026-07-11",
         "digitized_date": "2026-09-27",
         "note": "No visible disturbance; ground uniformly vegetated around the centroid. Parcel drawn as area of interest only.",
-        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey."
+        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey.",
+        "crs_fix": "2026-10-08: corrected. The interpreted scene is on Sentinel-2 tile 11UQS (UTM zone 11, EPSG:32611) but its pixel polygon was converted to WGS84 with EPSG:32612, shifting it exactly 6 degrees east (~-107.4). Re-converted via EPSG:32612 -> metres -> EPSG:32611; the polygon now sits at its site. Shape and confidence class unchanged.",
+        "source_crs": "EPSG:32611"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              -107.541113,
+              -113.541113,
               50.543487
             ],
             [
-              -107.532943,
+              -113.532943,
               50.543244
             ],
             [
-              -107.533384,
+              -113.533384,
               50.537229
             ],
             [
-              -107.541554,
+              -113.541554,
               50.537473
             ],
             [
-              -107.541113,
+              -113.541113,
               50.543487
             ]
           ]
@@ -186,7 +192,8 @@
         "interpreted_scene_date": "2026-08-25",
         "digitized_date": "2026-09-27",
         "note": "Centroid on a N-S field boundary; no discrete pad resolved at 10 m. Polygon traces the west parcel containing the centroid.",
-        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey."
+        "superseded_by": "Authoritative footprint wins: AER reclamation application site plan, OWA project boundary, or licensed high-resolution survey.",
+        "source_crs": "EPSG:32612"
       },
       "geometry": {
         "type": "Polygon",

@@ -41,5 +41,5 @@ jobs:
           if bad:
               sys.exit(f"{bad}/{len(files)} packets failed schema validation")
           print(f"validated {len(files)} packets against schema "
-                f"v{schema['properties']['schema_version']['const']}")
+                f"versions {schema['properties']['schema_version']['enum']}")
           EOF

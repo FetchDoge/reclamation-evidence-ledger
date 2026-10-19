@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """Radiometric lineage audit: per-scene processing baseline + BOA offset record.
 
-Reads every chip manifest under data/chips/, collects the unique Sentinel-2
-scene IDs, and fetches each scene's STAC item from Earth Search to record:
+Collects the unique Sentinel-2 scene IDs from every chip manifest under
+data/chips/ (when present) AND every committed packet's observations, so the
+audit covers every scene a published packet relies on, even on a fresh clone
+without chips. Fetches each scene's STAC item from Earth Search (metadata only,
+no imagery) to record:
   - s2:processing_baseline
   - earthsearch:boa_offset_applied
+  - the asset HREFs of the bands the pipeline reads (red, nir, swir16, blue,
+    scl), which packets cite as each chip's source_url
 
-Writes data/radiometric_lineage.json — the recorded evidence behind the
+Writes ledger/data/radiometric_lineage.json — the recorded evidence behind the
 pipeline's DN/10000 reflectance scaling. The scaling is NOT assumed: it is
 justified per scene by the provider's own offset-correction flag, plus an
 empirical chip-level check (raw DN minima ~1, inconsistent with a residual
@@ -15,7 +20,7 @@ empirical chip-level check (raw DN minima ~1, inconsistent with a residual
 Any scene breaking uniformity (offset flag False, baseline < 04.00 where
 offset semantics differ) is reported loudly, not smoothed over.
 
-Usage: .venv/bin/python ops/audit_lineage.py
+Usage: python ops/audit_lineage.py
 """
 
 import json
@@ -31,12 +36,18 @@ STAC_URL = "https://earth-search.aws.element84.com/v1"
 COLLECTION = "sentinel-2-l2a"
 
 
+ASSET_KEYS = ("red", "nir", "swir16", "blue", "scl")  # ledger.imagery.BAND_ASSETS
+
+
 def collect_scenes() -> dict[str, str]:
     scenes: dict[str, str] = {}
     for m in sorted((ROOT / "data" / "chips").glob("*/manifest.json")):
         d = json.loads(m.read_text())
         for s in d["scenes"]:
             scenes.setdefault(s["scene_id"], s["date"])
+    for p in sorted((ROOT / "packets").glob("*.json")):
+        for o in json.loads(p.read_text()).get("observations", []):
+            scenes.setdefault(o["scene_id"], o["date"])
     return scenes
 
 
@@ -65,6 +76,7 @@ def audit() -> dict:
             "processing_baseline": baseline,
             "boa_offset_applied": boa,
             "stac_item": f"{STAC_URL}/collections/{COLLECTION}/items/{sid}",
+            "assets": {k: item.assets[k].href for k in ASSET_KEYS if k in item.assets},
         }
         records.append(rec)
         flag = ""
@@ -83,6 +95,11 @@ def audit() -> dict:
         "n_audited": len(records),
         "processing_baselines_observed": baselines,
         "boa_offset_applied_uniform_true": all(r["boa_offset_applied"] is True for r in records),
+        "chip_level_dn_check": (
+            "The chip-level DN-minimum check was run on the chips audited "
+            "2026-09-27; it needs downloaded chips and is not re-run by this "
+            "metadata audit. The per-scene boa_offset_applied flag is."
+        ),
         "scale_justification": (
             "DN/10000. Per-scene STAC records show earthsearch:boa_offset_applied=True "
             "for every audited scene: the data provider removed the +1000 DN radiometric "

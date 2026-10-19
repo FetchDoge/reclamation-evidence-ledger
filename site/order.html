@@ -6,10 +6,18 @@
   <title>Order Screening Online — Reclamation Evidence</title>
   <meta name="description" content="Order 15-site satellite vegetation screening pilots online. Fast cadastral LSD intake, pre-registered blind protocol, 4-week turnaround.">
   <link rel="stylesheet" href="style.css">
+  <script src="ledger-data.js"></script>
   <script src="ledger.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
+
+  <!-- PUBLICATION HOLD + NOTICE 2026-10-09 (kept in sync with docs/index.html) -->
+  <aside id="ledger-hold-banner" role="alert" style="border:3px solid #92400e; background:#fffbeb; color:#78350f; padding:14px 20px; font-size:14px; line-height:1.5; text-align:center">
+    <b>RE-SCORING IN PROGRESS (OCT 2026).</b> Site-level calls are withheld pending a surrounding-land baseline; every site is published as <i>detected &ndash; screening only</i>.
+    <b>Notice 2026-10-09:</b> the screening results did not hold up under pre-registered testing (median geocoding error 2,658&nbsp;m) and are not evidence of recovery at any well.
+    <a href="https://marsojuji-cmyk.github.io/reclamation-evidence-ledger/NEGATIVE-RESULT-2026-10-09.html" style="color:#78350f; font-weight:700">Read the negative result &rarr;</a>
+  </aside>
 
   <!-- Institutional Telemetry Command Header Bar -->
   <aside class="top-command-bar" aria-label="System Telemetry">
@@ -168,7 +176,7 @@
             </div>
             <textarea id="well-intake-input" class="intake-textarea" rows="8"></textarea>
             <div class="intake-stats-bar">
-              <span>Automated DLS parsing estimates LSD centroids (~±300m) absorbed by 500m analysis buffer.</span>
+              <span>Site coordinates are DLS LSD centroids; their accuracy was withdrawn 2026-10-09 (median geocoding error 2,658 m, NEGATIVE-RESULT-2026-10-09.md).</span>
               <span style="font-weight: 700; color: var(--navy);">Valid WCSB Bounds Verified</span>
             </div>
           </div>

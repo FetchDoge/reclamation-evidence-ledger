@@ -1,100 +1,100 @@
-site_id,licensee,tier,confidence,delta
-01-06-018-26W4 (100),LEXIN RESOURCES LTD,detected,medium,0.0568
-01-28-020-27W4 (Facility),LEXIN RESOURCES LTD,identified,low,0.0983
-01-36-021-26W4 (100/05-31),ANTERRA ENERGY INC,detected,medium,0.0304
-02-02-030-18W4 (100),TRIDENT EXPLORATION (ALBERTA) CORP,detected,medium,0.047
-02-07-019-27W4 (100),LEXIN RESOURCES LTD,identified,medium,0.0836
-02-13-016-22W4 (100),LGX OIL + GAS INC,detected,medium,0.0595
-02-23-012-22W4 (100),HOUSTON OIL & GAS LTD,detected,medium,0.0565
-03-08-018-26W4 (100),LEXIN RESOURCES LTD,detected,medium,0.0773
-03-28-016-20W4 (100),VERITY ENERGY LTD,detected,medium,0.0172
-03-29-030-24W4 (102/14-29),CANADIAN OIL & GAS INTERNATIONAL INC,detected,medium,0.0058
-04-06-031-28W4 (100),TERRA ENERGY CORP,detected,medium,-0.0044
-04-12-014-20W4 (100),TUSCANY ENERGY LTD,identified,medium,0.0865
-04-21-011-27W4 (100),HOUSTON OIL & GAS LTD,detected,medium,0.0224
-04-27-035-25W4 (102),TERRA ENERGY CORP,identified,medium,-0.18
-04-28-038-03W5 (100),TERRA ENERGY CORP,detected,medium,-0.0432
-05-08-019-27W4 (100),LEXIN RESOURCES LTD,detected,medium,0.0661
-05-13-020-27W4 (100),LEXIN RESOURCES LTD,identified,low,0.2116
-05-17-014-20W4 (100),WOLF COULEE RESOURCES INC,detected,medium,0.0151
-05-17-019-27W4 (100),LEXIN RESOURCES LTD,detected,low,0.0798
-05-33-017-20W4 (100),VERITY ENERGY LTD,detected,medium,0.0469
-05-34-016-20W4 (102),VERITY ENERGY LTD,identified,medium,0.0857
-06-06-014-21W4 (100),TUSCANY ENERGY LTD,detected,medium,-0.0287
-06-07-014-20W4 (100),SANLING ENERGY LTD,detected,medium,-0.0049
-06-07-022-25W4 (100),ANTERRA ENERGY INC,identified,medium,0.0804
-06-08-031-01W5 (100),NEO EXPLORATION INC,detected,medium,0.0334
-06-11-018-26W4 (100),LEXIN RESOURCES LTD,identified,high,0.1369
-06-17-016-20W4 (100),LGX OIL + GAS INC,identified,medium,0.222
-06-20-029-19W4 (100),TRIDENT EXPLORATION (ALBERTA) CORP,detected,medium,0.0041
-06-21-020-27W4 (Facility),LEXIN RESOURCES LTD,detected,medium,0.0617
-06-23-016-18W4 (100),LGX OIL + GAS INC,detected,medium,-0.0219
-06-26-019-27W4 (100) - WIPA,LEXIN RESOURCES LTD,detected,medium,0.0696
-06-30-018-20W4 (100),VERITY ENERGY LTD,detected,medium,0.0419
-06-31-013-19W4 (100),TUSCANY ENERGY LTD,detected,medium,-0.0294
-06-33-011-28W4 (100) - WIPA,SANLING ENERGY LTD,detected,medium,0.0313
-06-35-011-22W4 (102),HOUSTON OIL & GAS LTD,identified,medium,0.1112
-06-35-022-22W4 (100/07-35),MANITOK ENERGY INC,detected,low,0.0187
-06-36-018-26W4 (Multi) - MIXED,LEXIN RESOURCES LTD,identified,low,0.0985
-07-03-017-20W4 (100),VERITY ENERGY LTD,detected,medium,-0.0028
-07-16-020-27W4 (102/10-16),LEXIN RESOURCES LTD,detected,medium,0.0776
-07-21-022-21W4 (100/02-21),MANITOK ENERGY INC,identified,medium,0.0904
-07-22-013-21W4 (102),HOUSTON OIL & GAS LTD,detected,medium,-0.0007
-07-30-018-26W4 (100),LEXIN RESOURCES LTD,detected,low,-0.0453
-08-04-019-27W4 (100),LEXIN RESOURCES LTD,identified,low,0.0903
-08-10-029-26W4 (100),TRIDENT EXPLORATION (ALBERTA) CORP,detected,low,-0.0305
-08-11-030-01W5 (100),NEO EXPLORATION INC,detected,medium,0.0474
-08-16-014-19W4 (100),HOUSTON OIL & GAS LTD,detected,medium,0.0552
-08-19-014-20W4 (100/01-19),WOLF COULEE RESOURCES INC,detected,medium,0.0066
-08-21-019-27W4 (100),LEXIN RESOURCES LTD,detected,low,0.0131
-08-22-030-01W5 (100),NEO EXPLORATION INC,detected,medium,0.0376
-08-23-016-21W4 (100),LGX OIL + GAS INC,detected,medium,-0.0129
-08-29-020-27W4 (Facility),LEXIN RESOURCES LTD,detected,medium,0.036
-08-31-013-20W4 (Facility),SANLING ENERGY LTD,detected,medium,0.0306
-08-31-036-21W4 (100),TERRA ENERGY CORP,detected,medium,0.0244
-09-05-014-22W4 (100),HOUSTON OIL & GAS LTD,detected,medium,0.0025
-09-09-031-23W4 (100),CANADIAN OIL & GAS INTERNATIONAL INC,detected,medium,0.0325
-09-14-014-20W4 (100),WOLF COULEE RESOURCES INC,identified,medium,0.1812
-09-18-015-19W4 (102) - WIPA,WOLF COULEE RESOURCES INC,detected,medium,-0.0513
-10-02-018-26W4 (100),LEXIN RESOURCES LTD,identified,medium,0.0837
-10-03-023-26W4 (100),ANTERRA ENERGY INC,detected,medium,-0.0143
-10-08-031-01W5 (100),NEO EXPLORATION INC,detected,medium,0.0449
-10-31-030-23W4 (100),CANADIAN OIL & GAS INTERNATIONAL INC,detected,medium,0.0308
-10-32-019-27W4 (Multi),LEXIN RESOURCES LTD,detected,medium,0.0587
-11-02-029-18W4 (102),TRIDENT EXPLORATION (ALBERTA) CORP,detected,medium,0.0763
-11-08-014-22W4 (Multi),MANITOK ENERGY INC,detected,medium,0.0788
-11-08-015-18W4 (100/10-08),WOLF COULEE RESOURCES INC,detected,medium,0.006
-11-14-017-21W4 (100),VERITY ENERGY LTD,detected,medium,0.0261
-11-20-014-19W4 (100),TUSCANY ENERGY LTD,detected,medium,0.021
-11-26-029-27W4 (100),TRIDENT EXPLORATION (ALBERTA) CORP,detected,medium,0.0289
-11-27-015-18W4 (Facility),WOLF COULEE RESOURCES INC,identified,medium,0.1562
-12-01-030-01W5 (Facility),NEO EXPLORATION INC,detected,medium,0.0321
-12-17-036-03W5 (100),TERRA ENERGY CORP,detected,medium,0.0644
-12-23-020-27W4 (Multi) - MIXED,LEXIN RESOURCES LTD,identified,low,0.0889
-13-01-014-22W4 (100),TUSCANY ENERGY LTD,identified,medium,0.1021
-13-17-019-27W4 (100),LEXIN RESOURCES LTD,identified,medium,0.0869
-14-02-017-19W4 (Multi),LGX OIL + GAS INC,detected,medium,-0.017
-14-03-020-27W4 (100),LEXIN RESOURCES LTD,detected,medium,-0.0001
-14-11-022-25W4 (100/13-11),MANITOK ENERGY INC,detected,medium,-0.0393
-14-14-018-26W4 (100),LEXIN RESOURCES LTD,identified,high,0.1375
-14-27-014-19W4 (Facility),SANLING ENERGY LTD,detected,medium,0.0254
-14-29-012-27W4 (102) - WIPA,CANADIAN OIL & GAS INTERNATIONAL INC,identified,medium,0.0889
-14-30-016-17W4 (100),LGX OIL + GAS INC,identified,medium,-0.0878
-14-31-021-25W4 (100),ANTERRA ENERGY INC,detected,medium,0.0322
-14-31-021-25W4 (100/06-31),ANTERRA ENERGY INC,detected,medium,0.0322
-15-04-037-21W4 (100),TERRA ENERGY CORP,detected,medium,0.0293
-15-32-013-19W4 (100) - PS,SANLING ENERGY LTD,identified,medium,0.0978
-16-04-018-26W4 (100),LEXIN RESOURCES LTD,identified,medium,0.1436
-16-08-023-23W4 (100/04-16),MANITOK ENERGY INC,detected,medium,0.0165
-16-09-020-27W4 (Multi),LEXIN RESOURCES LTD,detected,medium,0.0435
-16-12-014-21W4 (Facility),SANLING ENERGY LTD,detected,medium,0.0005
-16-12-036-28W4 (100) - WIPA,CANADIAN OIL & GAS INTERNATIONAL INC,detected,medium,-0.0727
-16-13-022-26W4 (100),ANTERRA ENERGY INC,identified,medium,0.0968
-16-14-018-26W4 (100),LEXIN RESOURCES LTD,identified,high,0.1454
-16-15-030-19W4 (102),TRIDENT EXPLORATION (ALBERTA) CORP,identified,medium,0.1285
-16-16-030-16W4 (100) - WIPA,CANADIAN OIL & GAS INTERNATIONAL INC,identified,medium,0.0818
-16-20-020-27W4 (100),LEXIN RESOURCES LTD,detected,medium,0.0724
-16-22-013-21W4 (Facility),TUSCANY ENERGY LTD,detected,medium,0.0024
-16-23-023-22W4 (100/01-26),MANITOK ENERGY INC,detected,medium,0.0755
-16-27-019-27W4 (100) - WIPA,LEXIN RESOURCES LTD,detected,medium,0.0077
-16-36-029-01W5 (Facility),NEO EXPLORATION INC,detected,medium,0.0618
+site_id,tier,confidence,delta
+01-06-018-26W4 (100),detected,medium,0.0568
+01-28-020-27W4 (Facility),detected,low,0.0983
+01-36-021-26W4 (100/05-31),detected,medium,0.0304
+02-02-030-18W4 (100),detected,medium,0.047
+02-07-019-27W4 (100),detected,medium,0.0836
+02-13-016-22W4 (100),detected,medium,0.0595
+02-23-012-22W4 (100),detected,medium,0.0565
+03-08-018-26W4 (100),detected,medium,0.0773
+03-28-016-20W4 (100),detected,medium,0.0172
+03-29-030-24W4 (102/14-29),detected,medium,0.0058
+04-06-031-28W4 (100),detected,medium,-0.0044
+04-12-014-20W4 (100),detected,medium,0.0865
+04-21-011-27W4 (100),detected,medium,0.0224
+04-27-035-25W4 (102),detected,medium,-0.18
+04-28-038-03W5 (100),detected,medium,-0.0432
+05-08-019-27W4 (100),detected,medium,0.0661
+05-13-020-27W4 (100),detected,low,0.2116
+05-17-014-20W4 (100),detected,medium,0.0151
+05-17-019-27W4 (100),detected,low,0.0798
+05-33-017-20W4 (100),detected,medium,0.0469
+05-34-016-20W4 (102),detected,medium,0.0857
+06-06-014-21W4 (100),detected,medium,-0.0287
+06-07-014-20W4 (100),detected,medium,-0.0049
+06-07-022-25W4 (100),detected,medium,0.0804
+06-08-031-01W5 (100),detected,medium,0.0334
+06-11-018-26W4 (100),detected,high,0.1369
+06-17-016-20W4 (100),detected,medium,0.222
+06-20-029-19W4 (100),detected,medium,0.0041
+06-21-020-27W4 (Facility),detected,medium,0.0617
+06-23-016-18W4 (100),detected,medium,-0.0219
+06-26-019-27W4 (100) - WIPA,detected,medium,0.0696
+06-30-018-20W4 (100),detected,medium,0.0419
+06-31-013-19W4 (100),detected,medium,-0.0294
+06-33-011-28W4 (100) - WIPA,detected,medium,0.0313
+06-35-011-22W4 (102),detected,medium,0.1112
+06-35-022-22W4 (100/07-35),detected,low,0.0187
+06-36-018-26W4 (Multi) - MIXED,detected,low,0.0985
+07-03-017-20W4 (100),detected,medium,-0.0028
+07-16-020-27W4 (102/10-16),detected,medium,0.0776
+07-21-022-21W4 (100/02-21),detected,medium,0.0904
+07-22-013-21W4 (102),detected,medium,-0.0007
+07-30-018-26W4 (100),detected,low,-0.0453
+08-04-019-27W4 (100),detected,low,0.0903
+08-10-029-26W4 (100),detected,low,-0.0305
+08-11-030-01W5 (100),detected,medium,0.0474
+08-16-014-19W4 (100),detected,medium,0.0552
+08-19-014-20W4 (100/01-19),detected,medium,0.0066
+08-21-019-27W4 (100),detected,low,0.0131
+08-22-030-01W5 (100),detected,medium,0.0376
+08-23-016-21W4 (100),detected,medium,-0.0129
+08-29-020-27W4 (Facility),detected,medium,0.036
+08-31-013-20W4 (Facility),detected,medium,0.0306
+08-31-036-21W4 (100),detected,medium,0.0244
+09-05-014-22W4 (100),detected,medium,0.0025
+09-09-031-23W4 (100),detected,medium,0.0325
+09-14-014-20W4 (100),detected,medium,0.1812
+09-18-015-19W4 (102) - WIPA,detected,medium,-0.0513
+10-02-018-26W4 (100),detected,medium,0.0837
+10-03-023-26W4 (100),detected,medium,-0.0143
+10-08-031-01W5 (100),detected,medium,0.0449
+10-31-030-23W4 (100),detected,medium,0.0308
+10-32-019-27W4 (Multi),detected,medium,0.0587
+11-02-029-18W4 (102),detected,medium,0.0763
+11-08-014-22W4 (Multi),detected,medium,0.0788
+11-08-015-18W4 (100/10-08),detected,medium,0.006
+11-14-017-21W4 (100),detected,medium,0.0261
+11-20-014-19W4 (100),detected,medium,0.021
+11-26-029-27W4 (100),detected,medium,0.0289
+11-27-015-18W4 (Facility),detected,medium,0.1562
+12-01-030-01W5 (Facility),detected,medium,0.0321
+12-17-036-03W5 (100),detected,medium,0.0644
+12-23-020-27W4 (Multi) - MIXED,detected,low,0.0889
+13-01-014-22W4 (100),detected,medium,0.1021
+13-17-019-27W4 (100),detected,medium,0.0869
+14-02-017-19W4 (Multi),detected,medium,-0.017
+14-03-020-27W4 (100),detected,medium,-0.0001
+14-11-022-25W4 (100/13-11),detected,medium,-0.0393
+14-14-018-26W4 (100),detected,high,0.1375
+14-27-014-19W4 (Facility),detected,medium,0.0254
+14-29-012-27W4 (102) - WIPA,detected,medium,0.0889
+14-30-016-17W4 (100),detected,medium,-0.0878
+14-31-021-25W4 (100),detected,medium,0.0322
+14-31-021-25W4 (100/06-31),detected,medium,0.0322
+15-04-037-21W4 (100),detected,medium,0.0293
+15-32-013-19W4 (100) - PS,detected,medium,0.0978
+16-04-018-26W4 (100),detected,medium,0.1436
+16-08-023-23W4 (100/04-16),detected,medium,0.0165
+16-09-020-27W4 (Multi),detected,medium,0.0435
+16-12-014-21W4 (Facility),detected,medium,0.0005
+16-12-036-28W4 (100) - WIPA,detected,medium,-0.0727
+16-13-022-26W4 (100),detected,medium,0.0968
+16-14-018-26W4 (100),detected,high,0.1454
+16-15-030-19W4 (102),detected,medium,0.1285
+16-16-030-16W4 (100) - WIPA,detected,medium,0.0818
+16-20-020-27W4 (100),detected,medium,0.0724
+16-22-013-21W4 (Facility),detected,medium,0.0024
+16-23-023-22W4 (100/01-26),detected,medium,0.0755
+16-27-019-27W4 (100) - WIPA,detected,medium,0.0077
+16-36-029-01W5 (Facility),detected,medium,0.0618

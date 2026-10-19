@@ -14,13 +14,31 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 
-def _triage_recommendation(delta: float | None, tier: str, confidence: str) -> str:
+def _triage_recommendation(
+    delta: float | None, tier: str, confidence: str, ci: list | None = None
+) -> str:
+    if tier == "not_assessable":
+        return "Not assessable: the screen makes no claim (see packet reasons). Not a finding about the site."
     if delta is None:
         return "Refused: Insufficient matched months (<2). Defer until next season."
     if delta <= -0.05:
         return "Walk First: Negative vegetation trend. Priority field inspection."
     if delta >= 0.08 and tier == "identified":
         return "Candidate: Positive recovery signal identified across seasons."
+    if delta >= 0.08 and tier == "detected":
+        # Beyond threshold but not "identified": either the change is not
+        # supported (no CI, or the CI includes zero) or a supported call is
+        # being published as "detected" under the publication hold. Neither
+        # is a within-envelope result, so neither may say so.
+        if ci is None or ci[0] <= 0 <= ci[1]:
+            return (
+                "Monitor: Change beyond threshold (delta >= +0.08) but not "
+                "supported — 95% CI absent or includes zero. Regular orbital watch."
+            )
+        return (
+            "Candidate (withheld): CI-supported positive signal published as "
+            "'detected' under the publication hold."
+        )
     return "Monitor: Within neutral envelope (|delta| < 0.08). Regular orbital watch."
 
 
@@ -31,6 +49,9 @@ def build_validation_memo(packets: list[dict], title: str = "Screening Validatio
     identified_count = sum(1 for p in packets if p.get("claim", {}).get("tier") == "identified")
     refused_count = sum(
         1 for p in packets if p.get("assessment_detail", {}).get("delta_vs_baseline") is None
+    )
+    not_assessable_count = sum(
+        1 for p in packets if p.get("claim", {}).get("tier") == "not_assessable"
     )
 
     # Sort packets: lowest delta first (regressed sites at the top of the walk register)
@@ -51,8 +72,15 @@ def build_validation_memo(packets: list[dict], title: str = "Screening Validatio
         "## Executive Screening Summary",
         "",
         f"- **Total Sites Screened:** {total_sites}",
-        f"- **Recovery Detected:** {detected_count} (Measured spectral shift vs baseline)",
-        f"- **Recovery Identified:** {identified_count} (Signal consistent with sustained vegetative recovery)",
+        f"- **Published tier `detected`:** {detected_count} (screening only; an NDVI "
+        "difference vs baseline was measured, not a finding of recovery)",
+        f"- **Published tier `identified`:** {identified_count} (withheld while "
+        "`claim.publication_hold` is active)",
+        "- **Status 2026-10-09:** screening results did not hold up under "
+        "pre-registered testing (NEGATIVE-RESULT-2026-10-09.md); not evidence "
+        "of recovery at any well.",
+        f"- **Not assessable:** {not_assessable_count} (the screen declines to make a claim; "
+        "a normal result, not a finding about the site)",
         f"- **Honest Refusals:** {refused_count} (Fewer than 2 matched calendar months; no claim made)",
         "",
         "> [!IMPORTANT]",
@@ -84,14 +112,18 @@ def build_validation_memo(packets: list[dict], title: str = "Screening Validatio
         tier = claim.get("tier", "—")
         conf = claim.get("confidence", "—")
 
-        delta_str = f"{delta:+.3f}" if delta is not None else "REFUSED"
+        delta_str = (
+            f"{delta:+.3f}"
+            if delta is not None
+            else ("n/a" if tier == "not_assessable" else "REFUSED")
+        )
         ci = det.get("delta_ci95")
         if ci and len(ci) == 2:
             ci_str = f"[{ci[0]:+.2f}, {ci[1]:+.2f}]"
         else:
             ci_str = "Not estimated"
 
-        action = _triage_recommendation(delta, tier, conf)
+        action = _triage_recommendation(delta, tier, conf, ci)
         lines.append(
             f"| {rank} | `{site_id}` | {name} | {stage} | {delta_str} | {ci_str} | {tier} | {conf} | {action} |"
         )

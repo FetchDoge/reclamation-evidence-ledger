@@ -1,0 +1,28 @@
+{
+  "prereg_file": "placebo/PREREG-placebo-ci-gated-v2-2026-10-16.md",
+  "prereg_sha256": "d777e6f15eacfeae5750273fb15f64ab51f300244a277a84e4e81a92a36dc3ef",
+  "pass_line_max_share_identified": 0.05,
+  "n_points": 100,
+  "n_eligible": 98,
+  "n_ineligible": 2,
+  "n_assessed": 98,
+  "n_refused": 0,
+  "n_no_scenes": 0,
+  "n_identified": 3,
+  "n_identified_recovering": 0,
+  "n_identified_stalled": 0,
+  "share_identified": 0.030612244897959183,
+  "wilson95_upper": 0.08617164360365084,
+  "verdict": "PASS",
+  "secondary": {
+    "n_audit_rule_flag": 3,
+    "n_delta_only_flag": 13,
+    "share_positive_delta": 0.6938775510204082,
+    "delta_median": 0.0253,
+    "delta_p05": -0.03879,
+    "delta_p95": 0.10310999999999985
+  },
+  "all_chip_hashes_verified": true,
+  "tier_rule": "ci-gated-v2",
+  "method": "ledger.change.assess, baseline 2023-2024 vs 2025-2026, thresholds +/-0.08"
+}

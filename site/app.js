@@ -1,3 +1,7 @@
+function escHtml(v) {
+  return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 /**
  * Reclamation Evidence — Precision Earth Observation Platform (PEOP)
  * Institutional remote sensing operations, Leaflet GIS mapping, real-time cadastral intake,
@@ -41,8 +45,8 @@
     projects: [
       {
         id: 'PILOT-2026-0881',
-        title: 'Obsidian Energy — Central Alberta Triage',
-        licensee: 'Obsidian Energy Ltd.',
+        title: 'Sample Client A — Central Alberta Triage',
+        licensee: 'Sample Client A (illustrative)',
         sitesCount: 15,
         fee: '$7,500 CAD',
         stage: 'validation',
@@ -53,8 +57,8 @@
       },
       {
         id: 'PILOT-2026-0742',
-        title: 'Lexin Legacy Portfolio Screen',
-        licensee: 'Lexin Resources Ltd.',
+        title: 'Sample Client B — Legacy Portfolio Screen',
+        licensee: 'Sample Client B (illustrative)',
         sitesCount: 27,
         fee: '$13,500 CAD',
         stage: 'ready',
@@ -65,8 +69,8 @@
       },
       {
         id: 'BENCH-2026-0914',
-        title: 'Pembina Geospatial Blind Benchmark',
-        licensee: 'Pembina Pipeline Corp.',
+        title: 'Sample Client C — Geospatial Blind Benchmark',
+        licensee: 'Sample Client C (illustrative)',
         sitesCount: 15,
         fee: '$4,800 CAD',
         stage: 'processing',
@@ -77,8 +81,8 @@
       },
       {
         id: 'ORD-2026-PILOT-9410',
-        title: 'Whitecap Resources Pilot Screen',
-        licensee: 'Whitecap Resources Inc.',
+        title: 'Sample Client D — Pilot Screen',
+        licensee: 'Sample Client D (illustrative)',
         sitesCount: 15,
         fee: '$7,500 CAD',
         stage: 'intake',
@@ -242,8 +246,7 @@
       marker.bindPopup(`
         <div style="font-family: var(--font-main); font-size: 12px; line-height: 1.4; color: #0f172a;">
           <div style="font-family: var(--font-mono); font-weight: 700; color: #1e3a8a;">${site.id}</div>
-          <div style="font-weight: 600; margin: 2px 0;">${site.lic}</div>
-          <div>Delta: <strong style="color: ${color}; font-family: var(--font-mono);">${deltaFmt}</strong> (${site.tier})</div>
+          <div>Delta: <strong style="color: ${color}; font-family: var(--font-mono);">${deltaFmt}</strong> (${site.stmt})</div>
           <div style="margin-top: 6px;">
             <button onclick="window.inspectSiteById('${site.id}')" style="background: #2563eb; color: white; border: none; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 600; cursor: pointer;">
               Inspect Spectral Curve
@@ -563,6 +566,22 @@
     }
   }
 
+  // --- Published counts: filled from ledger-data.js (generated from packets) ---
+  function fillLedgerCounts() {
+    const agg = (window.RECLAMATION_LEDGER && window.RECLAMATION_LEDGER.agg) || {};
+    const tiers = agg.tiers || {};
+    const values = {
+      n_sites: agg.n_sites,
+      n_detected: tiers.detected || 0,
+      n_identified: tiers.identified || 0,
+      n_high: (agg.confs || {}).high || 0
+    };
+    document.querySelectorAll('[data-ledger]').forEach(el => {
+      const v = values[el.getAttribute('data-ledger')];
+      if (v !== undefined) el.textContent = String(v);
+    });
+  }
+
   // --- Real 99-Packet Evidence Ledger Explorer ---
   function initLedgerTable() {
     const tableBody = document.getElementById('ledger-table-body');
@@ -578,7 +597,7 @@
       tableBody.innerHTML = '';
       const filtered = sites.filter(site => {
         const q = searchQuery.toLowerCase();
-        const matchesSearch = !q || site.id.toLowerCase().includes(q) || site.lic.toLowerCase().includes(q);
+        const matchesSearch = !q || site.id.toLowerCase().includes(q);
         if (!matchesSearch) return false;
 
         if (currentFilter === 'detected') return site.tier === 'detected';
@@ -591,12 +610,11 @@
         const tr = document.createElement('tr');
         const isPos = site.delta >= 0;
         const deltaFormatted = (isPos ? '+' : '') + Number(site.delta).toFixed(2);
-        const ciStr = site.ci ? `[${(site.ci[0] >= 0 ? '+' : '') + site.ci[0].toFixed(2)}, ${(site.ci[1] >= 0 ? '+' : '') + site.ci[1].toFixed(2)}]` : 'None (12 sites)';
+        const ciStr = site.ci ? `[${(site.ci[0] >= 0 ? '+' : '') + site.ci[0].toFixed(2)}, ${(site.ci[1] >= 0 ? '+' : '') + site.ci[1].toFixed(2)}]` : 'Not estimated (<4 matched months)';
 
         tr.innerHTML = `
           <td><span class="site-id-mono">${site.id}</span></td>
-          <td style="font-weight: 600; color: var(--navy); font-size: 12px;">${site.lic}</td>
-          <td><span class="tier-badge ${site.tier}">${site.tier}</span></td>
+          <td><span class="tier-badge ${site.tier}">${site.stmt}</span></td>
           <td><span class="delta-badge ${isPos ? 'pos' : 'neg'}">${deltaFormatted}</span></td>
           <td style="font-family: var(--font-mono); font-size: 11px; color: var(--slate-500);">${ciStr}</td>
           <td>
@@ -681,8 +699,7 @@
       contentEl.innerHTML = `
         <div style="display: flex; flex-direction: column; gap: 14px; font-size: 13px;">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: var(--slate-50); padding: 14px; border-radius: 12px; border: 1px solid var(--slate-200);">
-            <div><strong>Licensee:</strong> ${site.lic}</div>
-            <div><strong>Classification:</strong> <span class="tier-badge ${site.tier}">${site.tier}</span> (Conf: ${site.conf})</div>
+            <div><strong>Classification:</strong> <span class="tier-badge ${site.tier}">${site.stmt}</span> (Conf: ${site.conf})</div>
             <div><strong>Median Delta:</strong> <span class="delta-badge ${isPos ? 'pos' : 'neg'}">${deltaFormatted}</span></div>
             <div><strong>95% Bootstrap CI:</strong> ${ciStr}</div>
             <div><strong>Centroid Coordinates:</strong> ${site.lat.toFixed(4)} N, ${site.lon.toFixed(4)} W</div>
@@ -700,9 +717,7 @@
           <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 12px; border-radius: 8px;">
             <strong style="color: #92400e; font-size: 12px;">Stated Boundary & Caveats:</strong>
             <ul style="font-size: 11px; color: #78350f; margin-left: 16px; margin-top: 6px;">
-              <li>10m Sentinel-2 pixels cannot resolve wellheads; this is a vegetation screening triage, not a compliance verdict.</li>
-              <li>Baseline and current periods are compared month-for-month to eliminate seasonal phenology artifacts.</li>
-              <li>Site coordinates are DLS LSD centroids (~±300m); absorbed by the 500m screening buffer.</li>
+              ${(site.cav || []).map(c => `<li>${escHtml(c)}</li>`).join('')}
             </ul>
           </div>
         </div>
@@ -731,6 +746,7 @@
     renderKanban();
     initCalendar();
     initTasksWidget();
+    fillLedgerCounts();
     initLedgerTable();
     initModals();
 
