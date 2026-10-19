@@ -604,3 +604,14 @@ def test_no_packet_or_page_claims_withdrawn_coordinate_accuracy():
         text = f.read_text()
         for bad in ("\u00b1300", "±300", "&plusmn;300", "+/-300 m;"):
             assert bad not in text, (f.name, bad)
+
+
+def test_hold_banner_does_not_call_not_assessable_sites_detected():
+    from ledger.render import _banner
+
+    na = {"claim": {"tier": "not_assessable"}}
+    banner = _banner(na)
+    assert "not assessable" in banner
+    assert 'Every site is published as "detected' not in banner
+    general = _banner()
+    assert 'Every assessable site is published as "detected' in general

@@ -53,15 +53,19 @@ def _esc(v) -> str:
     return html.escape(str(v))
 
 
-def _banner() -> str:
+def _banner(packet: dict | None = None) -> str:
     from .change import PUBLICATION_HOLD
 
     if not PUBLICATION_HOLD.get("active"):
         return ""
+    if packet is not None and packet.get("claim", {}).get("tier") == "not_assessable":
+        lead = 'This site is published as "not assessable" — the screen makes no claim for it. '
+    else:
+        lead = 'Every assessable site is published as "detected – screening only". '
     return (
         '<div class="hold" role="status">Re-scoring in progress (Oct 2026): '
         "site-level calls are withheld pending a surrounding-land baseline. "
-        'Every site is published as "detected – screening only". '
+        f"{lead}"
         f"{_esc(PUBLICATION_HOLD['reason'])}</div>"
     )
 
@@ -149,7 +153,7 @@ def render_packet(packet: dict, chart_file: str | None = None) -> str:
     return PAGE_TMPL.format(
         title=_esc(packet["packet_id"]),
         attribution=ATTRIBUTION,
-        banner=_banner(),
+        banner=_banner(packet),
         body=f"""
 <h2>Site {_esc(s["site_id"])}</h2>
 <p>{_esc(s.get("name", ""))} — {_esc(s["latitude"])}, {_esc(s["longitude"])}<br>
