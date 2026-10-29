@@ -1,13 +1,17 @@
 name: commitlint
+# pull_request_target runs in the base-repo context so it can lint titles of fork PRs.
+# Safe here because no step checks out or executes PR code: the action only reads
+# the PR title through the API. Do not add actions/checkout of the PR head to this file.
 on:
   pull_request_target:
     types: [opened, edited, synchronize]
+permissions: {}
 jobs:
   lint-title:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
     steps:
-      - uses: amannn/action-semantic-pull-request@v6
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
